@@ -9,6 +9,7 @@ class Frog(pygame.sprite.Sprite):
     def __init__(self, color, width ,height):
         super().__init__() # call parent class constructor first
 
+
         # Pass in the color of the car, and its x and y position, width and height.
         # Set the background color and set it to be transparent
         self.image = pygame.Surface([width, height])
@@ -36,3 +37,7 @@ class Frog(pygame.sprite.Sprite):
     def moveDown(self, pixels):# move character down by n pixels (comment out this function later)
         self.rect.y += pixels
 
+    def setXPos(self,x):
+        self.rect.x = x
+    def setYPos(self,y):
+        self.rect.y = y

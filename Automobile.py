@@ -45,3 +45,8 @@ class Automobile(pygame.sprite.Sprite):
     def repaint(self, color):
         self.color = color
         pygame.draw.rect(self.image, self.color, [0, 0, self.width, self.height])
+
+    def setXPos(self,x):
+        self.rect.x = x
+    def setYPos(self,y):
+        self.rect.y = y

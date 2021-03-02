@@ -47,9 +47,10 @@ all_enemy_automobiles = pygame.sprite.Group() # This will be a list that will co
 
 
 # create your main character object (a frog in this case!)
-playerFrog = Frog(DARK_GREEN, 30,30)
-playerFrog.rect.x = 300 # set frogs color,width,height,x,y positions
-playerFrog.rect.y = 470 # y has to be 470 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
+playerFrog = Frog(DARK_GREEN, 30,30) # set frogs color,width,height
+playerFrog.setXPos(300) # set x,y positions
+playerFrog.setYPos(470) # y has to be 470 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
+
 
 # speed var for the automobiles!
 speed = 5

@@ -25,3 +25,8 @@ class RectBackground(pygame.sprite.Sprite):
 
         # Fetch the rectangle object that has the dimensions of the image.
         self.rect = self.image.get_rect()
+
+    def setXPos(self,x):
+        self.rect.x = x
+    def setYPos(self,y):
+        self.rect.y = y
