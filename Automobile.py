@@ -46,7 +46,8 @@ class Automobile(pygame.sprite.Sprite):
         self.color = color
         pygame.draw.rect(self.image, self.color, [0, 0, self.width, self.height])
 
-    def setXPos(self,x):
+    def setXPos(self,x): # set the x position of the rectangle field
         self.rect.x = x
-    def setYPos(self,y):
+
+    def setYPos(self,y):  # set the y position of the rectangle field
         self.rect.y = y
