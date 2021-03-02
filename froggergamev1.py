@@ -2,6 +2,9 @@
 """
      Pygame frogger game (1.1 build)
 
+3/2/21 ADDED ANOTHER ROAD AND MORE ROADMARKS.  FIND A WAY TO MAKE THE PROCESS OF CREATING THEM EASIER! THEN MOVE ON
+TO THE OBJECTIVES BELOW.
+
     3/1/21 LAST THING YOU WORKED ON WAS ROADMARKS (THE YELLOW MARKS ON THE ROADS)
 
     2/28/21 NEXT TIME, WORK ON THE COLLISION DETECTION BETWEEN EACH CAR AND FROG,
@@ -31,7 +34,7 @@ DARK_GREEN = (0,100,0)
 colorList = (RED, BLUE, GREEN, ORANGE, YELLOW, PURPLE) # these colors will be randomly picked from to generate different car colors
 SPEED = 5  # speed var for the automobiles!
 
-# setup
+# setup below
 pygame.init()
 
 # Set the width and height of the screen [width, height]
@@ -41,6 +44,8 @@ size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
 screen = pygame.display.set_mode(size) # intialize the screen
 pygame.display.set_caption("My Frogger Game") # set a title for the game window
+# create custom background object (the background of the game) EXCLUDE THIS, I DECIDED TO MAKE MY OWN BACKGROUND 3/1/21
+#gameBackground = Background('backgroundForGame(MadebyMe)V1.png', [0,0])
 
 all_sprites_list = pygame.sprite.Group() # This will be a list that will contain all the character sprites we intend to use in our game.
 all_background_locations = pygame.sprite.Group() # This will be a list that will contain all the roads, grass fields, and rivers we need for our game
@@ -49,23 +54,13 @@ all_enemy_automobiles = pygame.sprite.Group() # This will be a list that will co
 # create your main character object (a frog in this case!)
 playerFrog = Frog(DARK_GREEN, 30,30, 300, 470) # set frogs color,width,height, x,y positions (in that order). Y pos has to be 470 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
 
-
 #create automobile objects
 car1 = Automobile(ORANGE, 80, 60, randint(20, 30), -100, 380)
-car2 = Automobile(PURPLE, 80, 60, randint(20, 30), -100, 200)
+car2 = Automobile(PURPLE, 80, 60, randint(20, 30), -100, 320)
 car3 = Automobile(GREEN, 80, 60, randint(20, 30), -100, 100)
 
-
-# create custom background object (the background of the game) EXCLUDE THIS, I DECIDED TO MAKE MY OWN BACKGROUND 3/1/21
-#gameBackground = Background('backgroundForGame(MadebyMe)V1.png', [0,0])
-
-
-# make a RectBackground object (in this case its a long patch of grass)
+# make RectBackground objects
 grass1 = RectBackground(screen, GREEN, SCREEN_WIDTH,60, 0, 440) #set surface, color, width, height, x pos, y pos
-
-# make a RectBackground object (in this case its a road)
-road1 = RectBackground(screen, BLACK, SCREEN_WIDTH,60,0,380) #set surface, color, width, height, x pos, y pos
-
 
 all_sprites_list.add(playerFrog)# Add the frog to the list of sprites
 all_sprites_list.add(car1) # add the cars to the list of sprites
@@ -75,15 +70,27 @@ all_enemy_automobiles.add(car1) # add the car to the list of automobiles
 all_enemy_automobiles.add(car2) # add the car to the list of automobiles
 all_enemy_automobiles.add(car3) # add the car to the list of automobiles
 all_background_locations.add(grass1) # add  grass to background locations list (sprite list)
-all_background_locations.add(road1) # add road to background locations list (sprite list)
 
-x_pos = 30 # initial x pos value for yellow road marks
-y_pos = 405 # initial y pos value for yellow road marks
+road_x_pos = 0 # x position for road rectangle
+road_y_pos = 380 # y position for road rectangle
+for x in range(2):
+    road = RectBackground(screen, BLACK, SCREEN_WIDTH, 60, road_x_pos , road_y_pos) #set surface, color, width, height, x pos, y pos
+    all_background_locations.add(road)
+    road_y_pos -= 60
+
+roadmark_x_pos = 30 # initial x pos value for yellow road marks
+roadmark_y_pos = 405 # initial y pos value for yellow road marks
 for x in range(10): # Run a for loop to create multiple yellow mark background rect objects
-    roadmarks = RectBackground(screen, YELLOW, 30, 10, x_pos, y_pos) # make a RectBackground object (this is the yellow marks that go on the road).  Set surface, color, width, height, x pos, y pos
+    roadmarks = RectBackground(screen, YELLOW, 30, 10, roadmark_x_pos,roadmark_y_pos) # make a RectBackground object (this is the yellow marks that go on the road).  Set surface, color, width, height, x pos, y pos
     all_background_locations.add(roadmarks) # store each road mark in this list
-    x_pos += 100 # update the x pos for the next yellow road marks
+    roadmark_x_pos += 100 # update the x pos for the next yellow road marks
 
+roadmark_x_pos = 30 # initial x pos value for yellow road marks
+roadmark_y_pos = 350 # initial y pos value for yellow road marks
+for x in range(10): # Run a for loop to create multiple yellow mark background rect objects
+    roadmarks = RectBackground(screen, YELLOW, 30, 10, roadmark_x_pos,roadmark_y_pos) # make a RectBackground object (this is the yellow marks that go on the road).  Set surface, color, width, height, x pos, y pos
+    all_background_locations.add(roadmarks) # store each road mark in this list
+    roadmark_x_pos += 100 # update the x pos for the next yellow road marks
 
 # Loop until the user clicks the close button.
 done = False
