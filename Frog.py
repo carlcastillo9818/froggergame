@@ -37,7 +37,8 @@ class Frog(pygame.sprite.Sprite):
     def moveDown(self, pixels):# move character down by n pixels (comment out this function later)
         self.rect.y += pixels
 
-    def setXPos(self,x):
+    def setXPos(self,x): # set the x position of the rectangle field
         self.rect.x = x
-    def setYPos(self,y):
+
+    def setYPos(self,y):  # set the y position of the rectangle field
         self.rect.y = y
