@@ -4,7 +4,7 @@
 
     3/1/21 LAST THING YOU WORKED ON WAS ROADMARKS (THE YELLOW MARKS ON THE ROADS)
 
-    NEXT TIME, WORK ON THE COLLISION DETECTION BETWEEN EACH CAR AND FROG,
+    2/28/21 NEXT TIME, WORK ON THE COLLISION DETECTION BETWEEN EACH CAR AND FROG,
      ADD ROADS, ADD BETTER SPACING BETWEEN EVERY SPRITE, FIND OR MAKE YOUR OWN CAR SPRITES, AND FIND A WAY TO ADD
      SOUNDS (FOR THE CAR, OR BACKGROUND MUSIC, OR FROG SOUNDS), AND ADD A POINT SYSTEM TO KEEP TRACK OF PLAYER SCORE,
      AND MAKE YOUR OWN BACKGROUND WITH ROADS AND DIRT AND GRASS AND WATER...THATS IT FOR NOW LOL.
@@ -18,7 +18,7 @@ from Automobile import *
 from random import *
 from RectBackground import *
 
-# Define some colors
+# Define some colors (constants)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
@@ -28,7 +28,7 @@ YELLOW = (255,255,0)
 PURPLE = (255,0,255)
 RED = (255,0,0)
 DARK_GREEN = (0,100,0)
-colorList = (BLACK, WHITE, GREEN, ORANGE, YELLOW, PURPLE)
+colorList = (RED, BLUE, GREEN, ORANGE, YELLOW, PURPLE) # these colors will be randomly picked from to generate different car colors
 
 # setup
 pygame.init()
@@ -38,22 +38,21 @@ SCREEN_HEIGHT = 500
 SCREEN_WIDTH = 700
 size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
-
 screen = pygame.display.set_mode(size) # intialize the screen object
-
 pygame.display.set_caption("My Frogger Game") # set a title for the game window
 
-# This will be a list that will contain all the sprites we intend to use in our game.
-all_sprites_list = pygame.sprite.Group()
+all_sprites_list = pygame.sprite.Group() # This will be a list that will contain all the character sprites we intend to use in our game.
+all_background_locations = pygame.sprite.Group() # This will be a list that will contain all the roads, grass fields, and rivers we need for our game
+all_enemy_automobiles = pygame.sprite.Group() # This will be a list that will contain all the ENEMY automobile sprites we intend to use in our game.
+
 
 # create your main character object (a frog in this case!)
 playerFrog = Frog(DARK_GREEN, 30,30)
-playerFrog.rect.centerx = 350 # set frogs color,width,height,x,y positions
+playerFrog.rect.x = 300 # set frogs color,width,height,x,y positions
 playerFrog.rect.y = 470 # y has to be 470 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
 
 # speed var for the automobiles!
 speed = 5
-
 #create an automobile object
 car1 = Automobile(ORANGE, 80, 60, randint(20, 30))
 car1.rect.x = -100
@@ -65,25 +64,8 @@ car3 = Automobile(GREEN, 80, 60, randint(20, 30))
 car3.rect.x = -100
 car3.rect.y = 100
 
-# properties of the rect field (an object) listed below:
-# x,y
-# top, left, bottom, right
-# topleft, bottomleft, topright, bottomright
-# midtop, midleft, midbottom, midright
-# center, centerx, centery
-# size, width, height
-# w,h
-
-# create custom background object (the background of the game)
+# create custom background object (the background of the game) EXCLUDE THIS, I DECIDED TO MAKE MY OWN BACKGROUND 3/1/21
 #gameBackground = Background('backgroundForGame(MadebyMe)V1.png', [0,0])
-
-
-
-
-
-
-
-
 
 
 # make a RectBackground object (in this case its a long patch of grass)
@@ -96,13 +78,14 @@ road1 = RectBackground(screen, BLACK, SCREEN_WIDTH,60)
 road1.rect.x = 0
 road1.rect.y = 380
 
-
-
-# This will be a list that will contain all the roads, grass fields, and rivers we need for our game
-all_background_locations = pygame.sprite.Group()
-all_background_locations.add(grass1) # draw the grass first so things can go on top of it later
-all_background_locations.add(road1) # draw the roads next so that the road marks can go on top of them later
-
+# Add the frog to the list of objects
+all_sprites_list.add(playerFrog)
+# add the cars to the list of objects
+all_sprites_list.add(car1)
+all_sprites_list.add(car2)
+all_sprites_list.add(car3)
+all_background_locations.add(grass1) # add  grass to background locations list (sprite list)
+all_background_locations.add(road1) # add road to background locations list (sprite list)
 
 x_pos = 30 # initial x pos value for yellow road marks
 y_pos = 405 # initial y pos value for yellow road marks
@@ -114,33 +97,6 @@ for x in range(10): # Run a for loop to create multiple yellow mark background r
     all_background_locations.add(roadmarks) # store each road mark in this list
     x_pos += 100 # update the x pos for the next yellow road marks
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# This will be a list that will contain all the sprites we intend to use in our game.
-all_sprites_list = pygame.sprite.Group()
-# Add the frog to the list of objects
-all_sprites_list.add(playerFrog)
-# add the cars to the list of objects
-all_sprites_list.add(car1)
-all_sprites_list.add(car2)
-all_sprites_list.add(car3)
-
-
-# This will be a list that will contain all the ENEMY automobile sprites we intend to use in our game.
-all_enemy_automobiles = pygame.sprite.Group()
 all_enemy_automobiles.add(car1) # add the car to the list of automobiles
 all_enemy_automobiles.add(car2) # add the car to the list of automobiles
 all_enemy_automobiles.add(car3) # add the car to the list of automobiles
