@@ -13,12 +13,12 @@
 """
 import pygame
 from Frog import *
-from Background import *
+# dont need this anymore -> from Background import *
 from Automobile import *
 from random import *
 from RectBackground import *
 
-# Define some colors (constants)
+# Define constants (colors, speed, etc.)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
@@ -29,6 +29,7 @@ PURPLE = (255,0,255)
 RED = (255,0,0)
 DARK_GREEN = (0,100,0)
 colorList = (RED, BLUE, GREEN, ORANGE, YELLOW, PURPLE) # these colors will be randomly picked from to generate different car colors
+SPEED = 5  # speed var for the automobiles!
 
 # setup
 pygame.init()
@@ -38,69 +39,50 @@ SCREEN_HEIGHT = 500
 SCREEN_WIDTH = 700
 size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
-screen = pygame.display.set_mode(size) # intialize the screen object
+screen = pygame.display.set_mode(size) # intialize the screen
 pygame.display.set_caption("My Frogger Game") # set a title for the game window
 
 all_sprites_list = pygame.sprite.Group() # This will be a list that will contain all the character sprites we intend to use in our game.
 all_background_locations = pygame.sprite.Group() # This will be a list that will contain all the roads, grass fields, and rivers we need for our game
 all_enemy_automobiles = pygame.sprite.Group() # This will be a list that will contain all the ENEMY automobile sprites we intend to use in our game.
 
-
 # create your main character object (a frog in this case!)
-playerFrog = Frog(DARK_GREEN, 30,30) # set frogs color,width,height
-playerFrog.setXPos(300) # set x,y positions
-playerFrog.setYPos(470) # y has to be 470 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
+playerFrog = Frog(DARK_GREEN, 30,30, 300, 470) # set frogs color,width,height, x,y positions (in that order). Y pos has to be 470 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
 
 
-# speed var for the automobiles!
-speed = 5
-#create an automobile object
-car1 = Automobile(ORANGE, 80, 60, randint(20, 30))
-car1.rect.x = -100
-car1.rect.y = 380
-car2 = Automobile(PURPLE, 80, 60, randint(20, 30))
-car2.rect.x = -100
-car2.rect.y = 200
-car3 = Automobile(GREEN, 80, 60, randint(20, 30))
-car3.rect.x = -100
-car3.rect.y = 100
+#create automobile objects
+car1 = Automobile(ORANGE, 80, 60, randint(20, 30), -100, 380)
+car2 = Automobile(PURPLE, 80, 60, randint(20, 30), -100, 200)
+car3 = Automobile(GREEN, 80, 60, randint(20, 30), -100, 100)
+
 
 # create custom background object (the background of the game) EXCLUDE THIS, I DECIDED TO MAKE MY OWN BACKGROUND 3/1/21
 #gameBackground = Background('backgroundForGame(MadebyMe)V1.png', [0,0])
 
 
 # make a RectBackground object (in this case its a long patch of grass)
-grass1 = RectBackground(screen, GREEN, SCREEN_WIDTH,60)
-grass1.rect.x = 0
-grass1.rect.y = 440
+grass1 = RectBackground(screen, GREEN, SCREEN_WIDTH,60, 0, 440) #set surface, color, width, height, x pos, y pos
 
 # make a RectBackground object (in this case its a road)
-road1 = RectBackground(screen, BLACK, SCREEN_WIDTH,60)
-road1.rect.x = 0
-road1.rect.y = 380
+road1 = RectBackground(screen, BLACK, SCREEN_WIDTH,60,0,380) #set surface, color, width, height, x pos, y pos
 
-# Add the frog to the list of objects
-all_sprites_list.add(playerFrog)
-# add the cars to the list of objects
-all_sprites_list.add(car1)
+
+all_sprites_list.add(playerFrog)# Add the frog to the list of sprites
+all_sprites_list.add(car1) # add the cars to the list of sprites
 all_sprites_list.add(car2)
 all_sprites_list.add(car3)
+all_enemy_automobiles.add(car1) # add the car to the list of automobiles
+all_enemy_automobiles.add(car2) # add the car to the list of automobiles
+all_enemy_automobiles.add(car3) # add the car to the list of automobiles
 all_background_locations.add(grass1) # add  grass to background locations list (sprite list)
 all_background_locations.add(road1) # add road to background locations list (sprite list)
 
 x_pos = 30 # initial x pos value for yellow road marks
 y_pos = 405 # initial y pos value for yellow road marks
 for x in range(10): # Run a for loop to create multiple yellow mark background rect objects
-    # make a RectBackground object (this is the yellow marks that go on the road)
-    roadmarks = RectBackground(screen, YELLOW, 30, 10)
-    roadmarks.rect.x = x_pos
-    roadmarks.rect.y = y_pos
+    roadmarks = RectBackground(screen, YELLOW, 30, 10, x_pos, y_pos) # make a RectBackground object (this is the yellow marks that go on the road).  Set surface, color, width, height, x pos, y pos
     all_background_locations.add(roadmarks) # store each road mark in this list
     x_pos += 100 # update the x pos for the next yellow road marks
-
-all_enemy_automobiles.add(car1) # add the car to the list of automobiles
-all_enemy_automobiles.add(car2) # add the car to the list of automobiles
-all_enemy_automobiles.add(car3) # add the car to the list of automobiles
 
 
 # Loop until the user clicks the close button.
@@ -131,13 +113,13 @@ while not done:
 
 
     # --- Game logic should go here
-    # Game Logic
+
     for car in all_enemy_automobiles:
-        car.moveRight(speed)
+        car.moveRight(SPEED)
         if(car.rect.x > SCREEN_WIDTH):
             car.changeSpeed(randint(20,30)) # randint and choice come from the random library but you dont need to include the word random in front because I imported * from random
-            car.repaint(choice(colorList))
-            car.rect.x = -50
+            car.repaint(choice(colorList)) # make the car a different color each time it passes the screen to make it look like a new car is coming
+            car.setXPos(-50) # set x position of the car to come before the left side of the screen
 
     if(playerFrog.rect.x < 0): # left wall boundary
         playerFrog.rect.x = 0

@@ -5,12 +5,12 @@ WHITE = (255, 255, 255)
 
 # This class is used to make any sort of rectangular backgrounds (long rectangles of grass, roads, water streams, etc)
 class RectBackground(pygame.sprite.Sprite):
-    def __init__(self, surface, color,width,height):
+    def __init__(self, surface, color,width,height,x,y):
         super().__init__() # call parent class constructor first
 
         # Initialise attributes of the rect background
 
-        # Pass in the color of the rect background, and its x and y position, width and height.
+        # Pass in the color of the rect background,  width and height, and its x and y position,.
         # Set the background color and set it to be transparent
         self.image = pygame.Surface([width, height])
         self.image.fill(WHITE)
@@ -25,6 +25,10 @@ class RectBackground(pygame.sprite.Sprite):
 
         # Fetch the rectangle object that has the dimensions of the image.
         self.rect = self.image.get_rect()
+
+        # set x and y positions initially
+        self.rect.x = x
+        self.rect.y = y
 
     def setXPos(self, x):  # set the x position of the rectangle field
         self.rect.x = x

@@ -6,12 +6,11 @@ WHITE = (255, 255, 255)
 #this class is used to make automobiles for my frogger game (but could be used in other games too!)
 class Automobile(pygame.sprite.Sprite):
     # This class represents a car/truck/vehicle with wheels. It derives from the "Sprite" class in Pygame.
-
-    def __init__(self, color, width, height, speed):
+    def __init__(self, color, width, height, speed,x,y):
         # Call the parent class (Sprite) constructor
         super().__init__()
 
-        # Pass in the color of the car, and its x and y position, width and height.
+        # Pass in the color of the car, width and height, and its x and y position,.
         # Set the background color and set it to be transparent
         self.image = pygame.Surface([width, height])
         self.image.fill(WHITE)
@@ -32,22 +31,26 @@ class Automobile(pygame.sprite.Sprite):
         # Fetch the rectangle object that has the dimensions of the image.
         self.rect = self.image.get_rect()
 
-    def moveRight(self, speed):
+        # set x and y positions initially
+        self.rect.x = x
+        self.rect.y = y
+
+    def moveRight(self, speed): # move automobile right
         self.rect.x += self.speed * speed / 20
 
-    def moveLeft(self, speed):
+    def moveLeft(self, speed): # move automobile left
         self.rect.x -=  self.speed * speed / 20
 
 
-    def changeSpeed(self, speed):
+    def changeSpeed(self, speed): # adjust speed
         self.speed = speed
 
-    def repaint(self, color):
+    def repaint(self, color): # change the color of the automobile
         self.color = color
         pygame.draw.rect(self.image, self.color, [0, 0, self.width, self.height])
 
-    def setXPos(self,x): # set the x position of the rectangle field
+    def setXPos(self,x): # set the x position of the automobile
         self.rect.x = x
 
-    def setYPos(self,y):  # set the y position of the rectangle field
+    def setYPos(self,y):  # set the y position of the automobile
         self.rect.y = y
