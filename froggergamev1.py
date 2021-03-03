@@ -109,13 +109,13 @@ while not done:
 
     keys = pygame.key.get_pressed() # KEEP ALL THESE K MOVEMENTS INSIDE THE ELIF SO CHARACTER MOVES NON-CONTINOUSLY OTHERWISE IGNORE THIS
     if keys[pygame.K_LEFT]:
-        playerFrog.moveLeft(5)
+        playerFrog.moveLeft(4)
     elif keys[pygame.K_RIGHT]: # using elif makes it so if a user presses left and right, game only processes the last direction pressed
-        playerFrog.moveRight(5)
+        playerFrog.moveRight(4)
     elif keys[pygame.K_UP]:
-        playerFrog.moveUp(5)
+        playerFrog.moveUp(4)
     elif keys[pygame.K_DOWN]:
-        playerFrog.moveDown(5)
+        playerFrog.moveDown(4)
     # place keys under the for loop instead if you want CONTINUOUS MOVEMENT LIKE ASTEROIDS OR MARIO
 
 
