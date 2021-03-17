@@ -2,7 +2,9 @@
 """
      Pygame frogger game (1.1 build)
 
-     
+     3/17/21 REPLACE GREEN BLOCK WITH A FROG SPRITE that you will find online!  Add animations to Frog Character only (for now!)
+
+
  3/9/21 WRITE A FUNCTION TO HANDLE CREATION OF ROADS AND ANOTHER FUNCTION TO HANDLE CREATION OF ROAD MARKS SEPARATELY!
 
 3/2/21 ADDED ANOTHER ROAD AND MORE ROADMARKS.  FIND A WAY TO MAKE THE PROCESS OF CREATING THEM EASIER! THEN MOVE ON
@@ -22,6 +24,8 @@ from Frog import *
 from Automobile import *
 from random import *
 from RectBackground import *
+
+
 # dont need this anymore -> from Background import *
 
 # Define constants (colors, speed, etc.)
@@ -34,7 +38,7 @@ YELLOW = (255,255,0)
 PURPLE = (255,0,255)
 RED = (255,0,0)
 DARK_GREEN = (0,100,0)
-colorList = (RED, BLUE, GREEN, ORANGE, YELLOW, PURPLE) # colors are randomly picked to generate different car colors
+colorList = (RED, BLUE, GREEN, ORANGE, YELLOW, PURPLE, WHITE) # colors are randomly picked to generate different car colors
 SPEED = 5  # speed var for the automobiles!
 SCREEN_HEIGHT = 500  # Set the width and height of the screen [width, height]
 SCREEN_WIDTH = 700
@@ -65,15 +69,26 @@ def update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_
 
      # --- Game logic should go here
 
-    for car in all_enemy_automobiles:
-        car.moveRight(SPEED)
-        if(car.rect.x > SCREEN_WIDTH):
-            # randint and choice come from the random library but you dont need to include the word random in front because I imported * from random
-            car.changeSpeed(randint(20, 30))
-            # make the car a different color each time it passes the screen to make it look like a new car is coming
-            car.repaint(choice(colorList))
-            # set x position of the car to come before the left side of the screen
-            car.setXPos(-50)
+    for index, car in enumerate(all_enemy_automobiles): # enumerate gets the index with the element as you iterate through the list of automobiles
+        if(index % 2 != 0): # check if the index / 2 remainder is NOT 0, if true then every ODD index or vehicle should come from the right side of the screen and MOVE LEFT
+            car.moveLeft(SPEED) # make the car drive to the left
+            if(car.rect.x < -100): # check if the cars x position is less than the left side of the screen (0 or any neg value)
+                # randint and choice come from the random library but you dont need to include the word random in front because I imported * from random
+                car.changeSpeed(randint(20, 30))
+                # make the car a different color each time it passes the screen to make it look like a new car is coming
+                car.repaint(choice(colorList))
+                # set x position of the car to come before the right side of the screen
+                car.setXPos(800)
+
+        else: # remainder is 0 so cars will come from the left side of the screen, hence they will move RIGHT
+            car.moveRight(SPEED) # make the car drive to the right
+            if(car.rect.x > SCREEN_WIDTH): # check if the cars x position is greater than the right side of the screen
+                # randint and choice come from the random library but you dont need to include the word random in front because I imported * from random
+                car.changeSpeed(randint(20, 30))
+                # make the car a different color each time it passes the screen to make it look like a new car is coming
+                car.repaint(choice(colorList))
+                # set x position of the car to come before the left side of the screen
+                car.setXPos(-50)
 
     if(playerFrog.rect.x < 0):  # left wall boundary
         playerFrog.rect.x = 0
@@ -143,7 +158,8 @@ def main():
     size = (SCREEN_WIDTH, SCREEN_HEIGHT) # create a size var holding screen width and height
     screen = pygame.display.set_mode(size) # intialize the screen
     pygame.display.set_caption("My Frogger Game") # set a title for the game window
-    
+
+
     # EXCLUDE THIS, I DECIDED TO MAKE MY OWN BACKGROUND 3/1/21 create custom background object (the background of the game)
     #gameBackground = Background('backgroundForGame(MadebyMe)V1.png', [0,0])
 
@@ -152,25 +168,28 @@ def main():
     all_enemy_automobiles = pygame.sprite.Group() # This will be a list that will contain all the ENEMY automobile sprites we intend to use in our game.
 
     # create your main character object (a frog in this case!)
-    playerFrog = Frog(DARK_GREEN, 30,30, 300, 470) # set frogs color,width,height, x,y positions (in that order). Y pos has to be 470 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
+    playerFrog = Frog(DARK_GREEN, 300, 440) # set frogs color,x,y positions, width,height, (in that order). Y pos has to be 440 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
+    print(playerFrog.rect.x)
+    print(playerFrog.rect.y)
 
-    #create automobile objects
+    #create automobile objects (color, width, height, speed, x pos, y pos)
     car1 = Automobile(ORANGE, 80, 60, randint(20, 30), -100, 380)
-    car2 = Automobile(PURPLE, 80, 60, randint(20, 30), -100, 320)
-    car3 = Automobile(GREEN, 80, 60, randint(20, 30), -100, 100)
+    car2 = Automobile(PURPLE, 80, 60, randint(20, 30), 700, 320)
+    car3 = Automobile(GREEN, 80, 60, randint(20, 30), -100, 200)
 
-    # make RectBackground objects
+    # make multiple RectBackground objects (surface, xpos, ypos, color, width, height, background list, number of objects)
     makeMultipleBackgroundObjects(screen, 0, 380, BLACK, SCREEN_WIDTH, 60, all_background_locations, 2)
     makeMultipleBackgroundObjects(screen,30, 405, YELLOW, 30,10, all_background_locations, 10)
     makeMultipleBackgroundObjects(screen, 30, 350, YELLOW, 30, 10, all_background_locations, 10)
-
+    makeMultipleBackgroundObjects(screen, 0, 200, BLACK, SCREEN_WIDTH, 60, all_background_locations, 1)
+    makeMultipleBackgroundObjects(screen,30, 225, YELLOW, 30,10, all_background_locations, 10)
     # set surface, color, width, height, x pos, y pos of GRASS rectangle
     grass1 = RectBackground(screen, GREEN, SCREEN_WIDTH, 60, 0, 440)
-
+    grass2 = RectBackground(screen, GREEN, SCREEN_WIDTH, 60, 0, 260)
 
     all_sprites_list.add(playerFrog,car1,car2,car3) # add all game sprites to the list of game sprites
     all_enemy_automobiles.add(car1,car2,car3) # add the cars to the list of automobiles
-    all_background_locations.add(grass1) # add grass object to background locations list
+    all_background_locations.add(grass1, grass2) # add grass object to background locations list
 
 
     # Loop until the user clicks the close button.

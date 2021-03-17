@@ -25,7 +25,7 @@ class Automobile(pygame.sprite.Sprite):
         # Draw the automobile (a rectangle!)
         pygame.draw.rect(self.image, self.color, [0, 0, self.width, self.height])
 
-        # Instead we could load a proper picture of the automobile...
+        # Load a proper picture of the automobile...
         # self.image = pygame.image.load("car.png").convert_alpha()
 
         # Fetch the rectangle object that has the dimensions of the image.
