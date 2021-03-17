@@ -1,6 +1,15 @@
 
 """
-     Pygame frogger game (1.1 build)
+     Pygame frogger game (1.2 build)
+
+    3/17/21 I added a frog sprite image to my game for my frog character.  Now go to this link
+    http://programarcadegames.com/python_examples/en/sprite_sheets/ and look at how the dev
+    creates walking animations for his character then do something similar to that.  Use lists,
+    image property, and appending to the list to make two lists (one for moving left and one for moving
+    right)
+    Use the frog sprite sheet from  here https://www.spriters-resource.com/fullview/145236/
+    Also add another road, add more cars, then add a little pond at the top of the level
+    (make it a generic blue color for now)
 
      3/17/21 REPLACE GREEN BLOCK WITH A FROG SPRITE that you will find online!  Add animations to Frog Character only (for now!)
 
