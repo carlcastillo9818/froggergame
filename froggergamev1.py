@@ -1,7 +1,9 @@
 
 """
      Pygame frogger game (1.1 build)
- 3/8/21 WRITE A FUNCTION TO HANDLE CREATION OF RECTBACKGROUND OBJS (will make process below easier and automated)
+
+     
+ 3/9/21 WRITE A FUNCTION TO HANDLE CREATION OF ROADS AND ANOTHER FUNCTION TO HANDLE CREATION OF ROAD MARKS SEPARATELY!
 
 3/2/21 ADDED ANOTHER ROAD AND MORE ROADMARKS.  FIND A WAY TO MAKE THE PROCESS OF CREATING THEM EASIER! THEN MOVE ON
 TO THE OBJECTIVES BELOW.
@@ -38,7 +40,6 @@ SCREEN_HEIGHT = 500  # Set the width and height of the screen [width, height]
 SCREEN_WIDTH = 700
 
 def process_game_events(playerFrog, done): # process input and other stuff
-    print("Processing events function activated!")
     # --- Main event loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -62,7 +63,6 @@ def process_game_events(playerFrog, done): # process input and other stuff
 # update all objects that need to be updated, e.g. position changes, physics, all that other stuff
 def update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_enemy_automobiles):
 
-    print("Update function activated!")
      # --- Game logic should go here
 
     for car in all_enemy_automobiles:
@@ -101,7 +101,6 @@ def update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_
     # CUSTOM BACKGROUND screen.blit(gameBackground.image, gameBackground.rect)
 
 def draw_game_objects(screen, all_background_locations, all_sprites_list): #render things on screen
-    print("Draw game objects function activated!")
 
     # --- Drawing code should go here
 
@@ -127,17 +126,25 @@ def draw_game_objects(screen, all_background_locations, all_sprites_list): #rend
     pygame.display.flip()
 
 
+def makeMultipleBackgroundObjects(screen, x_pos, y_pos, color, width,height, bg_list, num_of_objs): # creates each background object FOR THIS SPECIFIC GAME (frogger)
+    for x in range(num_of_objs):
+        background_obj = RectBackground(screen, color,width,height, x_pos, y_pos)# set surface, color, width, height, x pos, y pos
+        bg_list.add(background_obj)
+        if(color == BLACK): # black will always be associated with background object that is a ROAD
+            y_pos -= 60 # adjust black rectangles as necessary
+        elif(color == YELLOW): # yellow will always be associated with background object that is a ROAD MARK
+            x_pos += 100 # adjust yellow rectangles as necessary
+
+
 def main():
     # setup below
     pygame.init()
 
-
-    size = (SCREEN_WIDTH, SCREEN_HEIGHT)
-
+    size = (SCREEN_WIDTH, SCREEN_HEIGHT) # create a size var holding screen width and height
     screen = pygame.display.set_mode(size) # intialize the screen
     pygame.display.set_caption("My Frogger Game") # set a title for the game window
     
-    # create custom background object (the background of the game) EXCLUDE THIS, I DECIDED TO MAKE MY OWN BACKGROUND 3/1/21
+    # EXCLUDE THIS, I DECIDED TO MAKE MY OWN BACKGROUND 3/1/21 create custom background object (the background of the game)
     #gameBackground = Background('backgroundForGame(MadebyMe)V1.png', [0,0])
 
     all_sprites_list = pygame.sprite.Group() # This will be a list that will contain all the character sprites we intend to use in our game.
@@ -152,32 +159,18 @@ def main():
     car2 = Automobile(PURPLE, 80, 60, randint(20, 30), -100, 320)
     car3 = Automobile(GREEN, 80, 60, randint(20, 30), -100, 100)
 
+    # make RectBackground objects
+    makeMultipleBackgroundObjects(screen, 0, 380, BLACK, SCREEN_WIDTH, 60, all_background_locations, 2)
+    makeMultipleBackgroundObjects(screen,30, 405, YELLOW, 30,10, all_background_locations, 10)
+    makeMultipleBackgroundObjects(screen, 30, 350, YELLOW, 30, 10, all_background_locations, 10)
+
+    # set surface, color, width, height, x pos, y pos of GRASS rectangle
+    grass1 = RectBackground(screen, GREEN, SCREEN_WIDTH, 60, 0, 440)
+
+
     all_sprites_list.add(playerFrog,car1,car2,car3) # add all game sprites to the list of game sprites
     all_enemy_automobiles.add(car1,car2,car3) # add the cars to the list of automobiles
-
-    # make RectBackground objects
-    grass1 = RectBackground(screen, GREEN, SCREEN_WIDTH,60, 0, 440) #set surface, color, width, height, x pos, y pos
-    road_x_pos = 0 # x position for road rectangle
-    road_y_pos = 380 # y position for road rectangle
-    for x in range(2):
-        road = RectBackground(screen, BLACK, SCREEN_WIDTH, 60, road_x_pos , road_y_pos) #set surface, color, width, height, x pos, y pos
-        all_background_locations.add(road)
-        road_y_pos -= 60
-
-    roadmark_x_pos = 30 # initial x pos value for yellow road marks
-    roadmark_y_pos = 405 # initial y pos value for yellow road marks
-    for x in range(10): # Run a for loop to create multiple yellow mark background rect objects
-        roadmarks = RectBackground(screen, YELLOW, 30, 10, roadmark_x_pos,roadmark_y_pos) # make a RectBackground object (this is the yellow marks that go on the road).  Set surface, color, width, height, x pos, y pos
-        all_background_locations.add(roadmarks) # store each road mark in this list
-        roadmark_x_pos += 100 # update the x pos for the next yellow road marks
-
-    roadmark_x_pos = 30 # initial x pos value for yellow road marks
-    roadmark_y_pos = 350 # initial y pos value for yellow road marks
-    for x in range(10): # Run a for loop to create multiple yellow mark background rect objects
-        roadmarks = RectBackground(screen, YELLOW, 30, 10, roadmark_x_pos,roadmark_y_pos) # make a RectBackground object (this is the yellow marks that go on the road).  Set surface, color, width, height, x pos, y pos
-        all_background_locations.add(roadmarks) # store each road mark in this list
-        roadmark_x_pos += 100 # update the x pos for the next yellow road marks
-    all_background_locations.add(grass1)
+    all_background_locations.add(grass1) # add grass object to background locations list
 
 
     # Loop until the user clicks the close button.
