@@ -1,14 +1,15 @@
 """
 This module is used to pull individual sprites from sprite sheets.
 
-I got this class file from progrmaarcadegames.com
+I got this class file from progrmaarcadegames.com so credits to them
+for this class file. It was appropriate to use in my game.
 """
 import pygame
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
 
-class SpriteSheet(object):
+class SpriteSheet():
     """ Class used to grab images out of a sprite sheet. """
 
     def __init__(self, file_name):

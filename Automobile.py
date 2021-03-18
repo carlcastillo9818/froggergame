@@ -20,7 +20,8 @@ class Automobile(pygame.sprite.Sprite):
         self.width = width
         self.height = height
         self.color = color
-        self.speed = speed
+        # Set speed vector of automobile
+        self.change_x = speed
 
         # Draw the automobile (a rectangle!)
         pygame.draw.rect(self.image, self.color, [0, 0, self.width, self.height])
@@ -35,15 +36,15 @@ class Automobile(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-    def moveRight(self, speed): # move automobile right
-        self.rect.x += self.speed * speed / 20
+    def moveRight(self): # move automobile right
+        self.rect.x += self.change_x
 
-    def moveLeft(self, speed): # move automobile left
-        self.rect.x -=  self.speed * speed / 20
+    def moveLeft(self): # move automobile left
+        self.rect.x -= self.change_x
 
 
     def changeSpeed(self, speed): # adjust speed
-        self.speed = speed
+        self.change_x = speed
 
     def repaint(self, color): # change the color of the automobile
         self.color = color
