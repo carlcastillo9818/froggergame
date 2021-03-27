@@ -2,6 +2,16 @@
 """
      Pygame frogger game (1.3 build)
 
+
+    NEXT TIME: WORK ON ADDING THE REST OF THE DIFFERENT COLOR CAR SPRITE IMAGES SO EACH TIME A NEW CAR COMES OUT OF THE LEFT
+    OR RIGHT WALL THEN IT WILL BE A DIFFERENT COLORED CAR SPRITE! MOVE ON FROM USING THE SIMPLE RECTANGLE SHAPES!
+
+    3/27/21  Added another water rectangle to the game, added up/down animations for the frog, added INITIAL car image for each car.
+
+
+    3/21/21 Added water rectangle, another car, and another road to the game!
+
+    
     3/18/21 I added the frogs walking left and walking right animations into the game!
     I still have to add another road, add more cars, then add a little pond at the top of the level.
     Also I still have to add UP and DOWN frog animations into the game (Use sprite sheet)
@@ -81,6 +91,11 @@ def process_game_events(playerFrog, done): # process input and other stuff
                 playerFrog.stop() # make the frog stop moving (This sets its speed to 0 so its resting)
             if event.key == pygame.K_RIGHT and playerFrog.change_x > 0: # check if the right arrow key is pressed and released AND check if the frogs speed is greater than 0
                 playerFrog.stop() # make the frog stop moving (This sets its speed to 0 so its resting)
+            if event.key == pygame.K_UP and playerFrog.change_y < 0:
+                playerFrog.stop()
+            if event.key == pygame.K_DOWN and playerFrog.change_y > 0:
+                playerFrog.stop()
+
     keys = pygame.key.get_pressed()  # KEEP ALL THESE K MOVEMENTS INSIDE THE ELIF SO CHARACTER MOVES NON-CONTINOUSLY OTHERWISE IGNORE THIS
     if keys[pygame.K_LEFT]:
         print("You went left by " + str(playerFrog.change_x))  # shows how many times you are moving the character to the left (testing)
@@ -89,9 +104,11 @@ def process_game_events(playerFrog, done): # process input and other stuff
         print("You went right by " + str(playerFrog.change_x)) # shows how many times you are moving the character to the right (testing)
         playerFrog.moveRight()
     elif keys[pygame.K_UP]:
-        playerFrog.moveUp(4)
+        print("You went up by " + str(playerFrog.change_y))  # shows how many times you are moving the character to the left (testing)
+        playerFrog.moveUp()
     elif keys[pygame.K_DOWN]:
-        playerFrog.moveDown(4)
+        print("You went down by " + str(playerFrog.change_y))  # shows how many times you are moving the character to the left (testing)
+        playerFrog.moveDown()
 
     # place keys under the for loop instead if you want CONTINUOUS MOVEMENT LIKE ASTEROIDS OR MARIO
     return done
@@ -171,7 +188,7 @@ def draw_game_objects(screen, all_background_locations, all_sprites_list): #rend
     pygame.display.flip()
 
 
-def makeMultipleBackgroundObjects(screen, x_pos, y_pos, color, width,height, bg_list, num_of_objs): # creates each background object FOR THIS SPECIFIC GAME (frogger)
+def makeRoads(screen, x_pos, y_pos, color, width,height, bg_list, num_of_objs): # creates each background object FOR THIS SPECIFIC GAME (frogger)
     for x in range(num_of_objs):
         background_obj = RectBackground(screen, color,width,height, x_pos, y_pos)# set surface, color, width, height, x pos, y pos
         bg_list.add(background_obj)
@@ -202,24 +219,33 @@ def main():
     print(playerFrog.rect.x)
     print(playerFrog.rect.y)
 
-    #create automobile objects (color, width, height, speed, x pos, y pos)
-    car1 = Automobile(ORANGE, 80, 60, randint(6, 8), -100, 380)
-    car2 = Automobile(PURPLE, 80, 60, randint(6, 8), 700, 320)
-    car3 = Automobile(GREEN, 80, 60, randint(6, 8), -100, 200)
+    #create automobile objects (color, width, height, speed, x pos, y pos, direction of car image)
+    car1 = Automobile(ORANGE, 80, 60, randint(6, 8), -100, 380, "Right")
+    car2 = Automobile(PURPLE, 80, 60, randint(6, 8), 700, 320, "Left")
+    car3 = Automobile(GREEN, 80, 60, randint(6, 8), -100, 200, "Right")
+    car4 = Automobile(RED, 80, 60, randint(6,8), 700, 140, "Left")
 
-    # make multiple RectBackground objects (surface, xpos, ypos, color, width, height, background list, number of objects)
-    makeMultipleBackgroundObjects(screen, 0, 380, BLACK, SCREEN_WIDTH, 60, all_background_locations, 2)
-    makeMultipleBackgroundObjects(screen,30, 405, YELLOW, 30,10, all_background_locations, 10)
-    makeMultipleBackgroundObjects(screen, 30, 350, YELLOW, 30, 10, all_background_locations, 10)
-    makeMultipleBackgroundObjects(screen, 0, 200, BLACK, SCREEN_WIDTH, 60, all_background_locations, 1)
-    makeMultipleBackgroundObjects(screen,30, 225, YELLOW, 30,10, all_background_locations, 10)
-    # set surface, color, width, height, x pos, y pos of GRASS rectangle
+
+    # make multiple road objects (surface, xpos, ypos, color, width, height, background list, number of objects)
+    makeRoads(screen, 0, 380, BLACK, SCREEN_WIDTH, 60, all_background_locations, 2)
+    makeRoads(screen,30, 405, YELLOW, 30,10, all_background_locations, 7)
+    makeRoads(screen, 30, 350, YELLOW, 30, 10, all_background_locations, 7)
+    makeRoads(screen, 0, 200, BLACK, SCREEN_WIDTH, 60, all_background_locations, 2)
+    makeRoads(screen,30, 225, YELLOW, 30,10, all_background_locations, 7)
+    makeRoads(screen,30, 165, YELLOW, 30,10, all_background_locations, 7)
+
+
+    # grass rectangles -> pass args:  surface, color, width, height, x pos, y pos
     grass1 = RectBackground(screen, GREEN, SCREEN_WIDTH, 60, 0, 440)
     grass2 = RectBackground(screen, GREEN, SCREEN_WIDTH, 60, 0, 260)
+    # water rectangle -> pass args:  surface, color, width, height, x pos, y pos
+    water1 = RectBackground(screen, BLUE, SCREEN_WIDTH, 140, 0,0)
 
-    all_sprites_list.add(playerFrog,car1,car2,car3) # add all game sprites to the list of game sprites
-    all_enemy_automobiles.add(car1,car2,car3) # add the cars to the list of automobiles
-    all_background_locations.add(grass1, grass2) # add grass object to background locations list
+
+    # add all objects to the correct lists here
+    all_sprites_list.add(playerFrog,car1,car2,car3,car4) # add all game sprites to the list of game sprites
+    all_enemy_automobiles.add(car1,car2,car3, car4) # add the cars to the list of automobiles
+    all_background_locations.add(grass1, grass2, water1) # add grass and water objects to background locations list
 
 
     # Loop until the user clicks the close button.
