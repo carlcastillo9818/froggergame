@@ -16,9 +16,9 @@ class SpriteSheet():
         """ Constructor. Pass in the file name of the sprite sheet. """
 
         # Load the sprite sheet.
-        self.sprite_sheet = pygame.image.load(file_name).convert()
+        self.sprite_sheet = pygame.image.load(file_name).convert_alpha()
 
-    def get_image(self, x, y, width, height):
+    def get_image(self, x, y, width, height, color):
         """ Grab a single image out of a larger spritesheet
             Pass in the x, y location of the sprite
             and the width and height of the sprite. """
@@ -33,7 +33,7 @@ class SpriteSheet():
         # Assuming white works as the transparent color
         #Set the current color key for the Surface. When blitting this Surface onto a destination,
         # any pixels that have the same color as the colorkey will be transparent.
-        image.set_colorkey(WHITE)
+        image.set_colorkey(color)
 
         # Return the image
         return image

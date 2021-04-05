@@ -3,8 +3,8 @@
      Pygame frogger game (1.3 build)
 
 
-    NEXT TIME: WORK ON ADDING THE REST OF THE DIFFERENT COLOR CAR SPRITE IMAGES SO EACH TIME A NEW CAR COMES OUT OF THE LEFT
-    OR RIGHT WALL THEN IT WILL BE A DIFFERENT COLORED CAR SPRITE! MOVE ON FROM USING THE SIMPLE RECTANGLE SHAPES!
+    4/5/21 Succeeded in ADDING THE REST OF THE DIFFERENT COLOR CAR SPRITE IMAGES SO EACH TIME A NEW CAR COMES OUT OF THE LEFT
+    OR RIGHT WALL THEN ITS A DIFFERENT COLORED CAR SPRITE! I MOVED ON FROM USING THE SIMPLE RECTANGLE SHAPES!
 
     3/27/21  Added another water rectangle to the game, added up/down animations for the frog, added INITIAL car image for each car.
 
@@ -74,11 +74,21 @@ YELLOW = (255,255,0)
 PURPLE = (255,0,255)
 RED = (255,0,0)
 DARK_GREEN = (0,100,0)
-colorList = (RED, BLUE, GREEN, ORANGE, YELLOW, PURPLE, WHITE) # colors are randomly picked to generate different car colors
+colorList = (RED, BLUE, GREEN, ORANGE, YELLOW, PURPLE, WHITE) # colorList is a tuple containing colors that are randomly picked to generate different car colors
+
+
 SCREEN_HEIGHT = 500  # Set the width and height of the screen [width, height]
 SCREEN_WIDTH = 700
 
-def process_game_events(playerFrog, done): # process input and other stuff
+# setup pygame and screen size and caption below
+pygame.init()
+
+size = (SCREEN_WIDTH, SCREEN_HEIGHT)  # create a size var holding screen width and height
+screen = pygame.display.set_mode(size)  # intialize the screen
+pygame.display.set_caption("My Frogger Game")  # set a title for the game window
+
+
+def process_game_events(playerFrog, done): # process input keys from the player (moving the frog in different directions for instance)
     # --- Main event loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -114,14 +124,14 @@ def process_game_events(playerFrog, done): # process input and other stuff
     return done
 
 # update all objects that need to be updated, e.g. position changes, physics, all that other stuff
-def update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_enemy_automobiles):
+def update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_enemy_automobiles, backgroundimg):
      # --- Game logic should go here
     for index, car in enumerate(all_enemy_automobiles): # enumerate gets the index with the element as you iterate through the list of automobiles
         if(index % 2 != 0): # check if the index / 2 remainder is NOT 0, if true then every ODD index or vehicle should come from the right side of the screen and MOVE LEFT
             car.moveLeft() # make the car drive to the left
             if(car.rect.x < -100): # check if the cars x position is less than the left side of the screen (0 or any neg value)
                 # randint and choice come from the random library but you dont need to include the word random in front because I imported * from random
-                car.changeSpeed(randint(6, 8))
+                car.changeSpeed(randint(6, 10))
                 # make the car a different color each time it passes the screen to make it look like a new car is coming
                 car.repaint(choice(colorList))
                 # set x position of the car to come before the right side of the screen
@@ -131,7 +141,7 @@ def update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_
             car.moveRight() # make the car drive to the right
             if(car.rect.x > SCREEN_WIDTH): # check if the cars x position is greater than the right side of the screen
                 # randint and choice come from the random library but you dont need to include the word random in front because I imported * from random
-                car.changeSpeed(randint(6, 8))
+                car.changeSpeed(randint(6, 10))
                 # make the car a different color each time it passes the screen to make it look like a new car is coming
                 car.repaint(choice(colorList))
                 # set x position of the car to come before the left side of the screen
@@ -156,20 +166,21 @@ def update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_
     # Here, we clear the screen to white. Don't put other drawing commands
     # above this, or they will be erased with this command.
 
+
     # If you want a background image, replace this clear with blit'ing the
     # background image.
-    screen.fill(WHITE)
+    # screen.fill(WHITE)
 
-    # CUSTOM BACKGROUND screen.blit(gameBackground.image, gameBackground.rect)
+    # blit the CUSTOM BACKGROUND
+    screen.blit(backgroundimg, (0, 0))
 
-def draw_game_objects(screen, all_background_locations, all_sprites_list): #render things on screen
+
+
+def draw_game_objects(screen, all_sprites_list): #render things on screen
 
     # --- Drawing code should go here
 
-    # draw all background locations (grass, road, water) in one go.
-    all_background_locations.draw(screen)
-
-    # Now let's draw all the sprites in one go. (the ones from the sprites list will go above background)
+    # Let's draw all the sprites in one go. (the ones from the sprites list will go above background)
     all_sprites_list.draw(screen)
 
     '''
@@ -184,7 +195,7 @@ def draw_game_objects(screen, all_background_locations, all_sprites_list): #rend
         which should only hold the sprites that will be above the background
         '''
 
-    # --- Go ahead and update the screen with what we've drawn.
+    # --- Go ahead and update the ENTIRE screen with what we've drawn.
     pygame.display.flip()
 
 
@@ -199,13 +210,8 @@ def makeRoads(screen, x_pos, y_pos, color, width,height, bg_list, num_of_objs): 
 
 
 def main():
-    # setup below
-    pygame.init()
 
-    size = (SCREEN_WIDTH, SCREEN_HEIGHT) # create a size var holding screen width and height
-    screen = pygame.display.set_mode(size) # intialize the screen
-    pygame.display.set_caption("My Frogger Game") # set a title for the game window
-
+    background = pygame.image.load("backgroundForGame(V2).png") # my custom background for my game
 
     # EXCLUDE THIS, I DECIDED TO MAKE MY OWN BACKGROUND 3/1/21 create custom background object (the background of the game)
     #gameBackground = Background('backgroundForGame(MadebyMe)V1.png', [0,0])
@@ -220,32 +226,32 @@ def main():
     print(playerFrog.rect.y)
 
     #create automobile objects (color, width, height, speed, x pos, y pos, direction of car image)
-    car1 = Automobile(ORANGE, 80, 60, randint(6, 8), -100, 380, "Right")
-    car2 = Automobile(PURPLE, 80, 60, randint(6, 8), 700, 320, "Left")
-    car3 = Automobile(GREEN, 80, 60, randint(6, 8), -100, 200, "Right")
-    car4 = Automobile(RED, 80, 60, randint(6,8), 700, 140, "Left")
+    car1 = Automobile(ORANGE, 80, 60, randint(6, 7), -100, 380, "Right")
+    car2 = Automobile(PURPLE, 80, 60, randint(6, 7), 700, 320, "Left")
+    car3 = Automobile(GREEN, 80, 60, randint(6, 7), -100, 200, "Right")
+    car4 = Automobile(RED, 80, 60, randint(6,7), 700, 140, "Left")
 
-
+    '''
     # make multiple road objects (surface, xpos, ypos, color, width, height, background list, number of objects)
     makeRoads(screen, 0, 380, BLACK, SCREEN_WIDTH, 60, all_background_locations, 2)
     makeRoads(screen,30, 405, YELLOW, 30,10, all_background_locations, 7)
     makeRoads(screen, 30, 350, YELLOW, 30, 10, all_background_locations, 7)
     makeRoads(screen, 0, 200, BLACK, SCREEN_WIDTH, 60, all_background_locations, 2)
     makeRoads(screen,30, 225, YELLOW, 30,10, all_background_locations, 7)
-    makeRoads(screen,30, 165, YELLOW, 30,10, all_background_locations, 7)
+    makeRoads(screen,30, 165, YELLOW, 30,10, all_background_locations, 7) '''
 
-
+    '''
     # grass rectangles -> pass args:  surface, color, width, height, x pos, y pos
     grass1 = RectBackground(screen, GREEN, SCREEN_WIDTH, 60, 0, 440)
     grass2 = RectBackground(screen, GREEN, SCREEN_WIDTH, 60, 0, 260)
     # water rectangle -> pass args:  surface, color, width, height, x pos, y pos
-    water1 = RectBackground(screen, BLUE, SCREEN_WIDTH, 140, 0,0)
+    water1 = RectBackground(screen, BLUE, SCREEN_WIDTH, 140, 0,0)'''
 
 
     # add all objects to the correct lists here
     all_sprites_list.add(playerFrog,car1,car2,car3,car4) # add all game sprites to the list of game sprites
     all_enemy_automobiles.add(car1,car2,car3, car4) # add the cars to the list of automobiles
-    all_background_locations.add(grass1, grass2, water1) # add grass and water objects to background locations list
+    ''' all_background_locations.add(grass1, grass2, water1) # add grass and water objects to background locations list '''
 
 
     # Loop until the user clicks the close button.
@@ -253,13 +259,15 @@ def main():
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
 
+
     # -------- Main Program Loop -----------
     while not done:
-        done = process_game_events(playerFrog, done)
-        update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_enemy_automobiles)
-        draw_game_objects(screen, all_background_locations, all_sprites_list)
         # --- Limit to 60 frames per second
         clock.tick(60)
+        done = process_game_events(playerFrog, done)
+        update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_enemy_automobiles, background)
+        draw_game_objects(screen, all_sprites_list)
+
 
     # Close the window and quit.
     pygame.quit()

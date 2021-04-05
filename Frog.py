@@ -14,7 +14,7 @@ class Frog(pygame.sprite.Sprite):
         # Set the background color and set it to be transparent
         self.image = pygame.Surface([width, height])
         self.image.fill(WHITE)
-        self.image.set_colorkey(WHITE)
+        #self.image.set_colorkey(WHITE)
         self.width = width
         self.height = height
         self.color = color
@@ -34,51 +34,51 @@ class Frog(pygame.sprite.Sprite):
         sprite_sheet = SpriteSheet("GreenFrog.png")
 
         #get the LEFT direction images
-        image = sprite_sheet.get_image(0,0,24,15) # create starting image the frog starts with
+        image = sprite_sheet.get_image(0,0,24,15, WHITE) # create starting image the frog starts with
         image = pygame.transform.scale(image, (60,60))  # scale the image so it fits with other game sprites (Cars, etc)
         self.frog_walking_left.append(image) # add the starting image to the list (moving left)
-        image = sprite_sheet.get_image(0, 48, 30,24) # create the image var for left walking (get the coordinates,width,height of the image in the SPRITE SHEET picture)
+        image = sprite_sheet.get_image(0, 48, 30,24, WHITE) # create the image var for left walking (get the coordinates,width,height of the image in the SPRITE SHEET picture)
         image = pygame.transform.scale(image, (60, 60))
         self.frog_walking_left.append(image) # load the next LEFT walking image to the list (moving left)
-        image = sprite_sheet.get_image(34,54, 34,17)
+        image = sprite_sheet.get_image(34,54, 34,17, WHITE)
         image = pygame.transform.scale(image,(60,60))
         self.frog_walking_left.append(image)
 
         # get the RIGHT direction images
-        image = sprite_sheet.get_image(0,0,24,15) # create starting image the frog starts with
+        image = sprite_sheet.get_image(0,0,24,15, WHITE) # create starting image the frog starts with
         image = pygame.transform.flip(image, True, False) # FLIP the image (so instead of looking left, now it looks in the right direction)
         image = pygame.transform.scale(image, (60,60)) # scale the image so it fits with other game sprites (Cars, etc)
         self.frog_walking_right.append(image) # add the starting image to the list (moving right)
-        image = sprite_sheet.get_image(0, 48, 30,24) # create the image var for right walking (get the x coord, y coord,width,height of the image in the SPRITE SHEET picture)
+        image = sprite_sheet.get_image(0, 48, 30,24, WHITE) # create the image var for right walking (get the x coord, y coord,width,height of the image in the SPRITE SHEET picture)
         image = pygame.transform.flip(image, True, False)
         image = pygame.transform.scale(image, (60, 60))
         self.frog_walking_right.append(image) # load the next right walking image to the list (moving right)
-        image = sprite_sheet.get_image(34,54, 34,17)
+        image = sprite_sheet.get_image(34,54, 34,17, WHITE)
         image = pygame.transform.flip(image, True, False)
         image = pygame.transform.scale(image,(60,60))
         self.frog_walking_right.append(image)
 
         #get the UP direction images
-        image = sprite_sheet.get_image(0,0,24,15) # create starting image the frog starts with
+        image = sprite_sheet.get_image(0,0,24,15, WHITE) # create starting image the frog starts with
         image = pygame.transform.scale(image, (60,60)) # scale the image so it fits with other game sprites (Cars, etc)
         self.frog_walking_up.append(image) # add the starting image to the list (moving up)
-        image = sprite_sheet.get_image(0, 48, 30,24) # create the image var for up walking (get the x coord, y coord,width,height of the image in the SPRITE SHEET picture)
+        image = sprite_sheet.get_image(0, 48, 30,24, WHITE) # create the image var for up walking (get the x coord, y coord,width,height, color key of the image in the SPRITE SHEET picture)
         image = pygame.transform.scale(image, (60,60)) # scale the image so it fits with other game sprites (Cars, etc)
         self.frog_walking_up.append(image) # load the next up walking image to the list(moving up)
-        image = sprite_sheet.get_image(34,54, 34,17)
+        image = sprite_sheet.get_image(34,54, 34,17, WHITE)
         image = pygame.transform.scale(image,(60,60))
         self.frog_walking_up.append(image)
 
         #get the DOWN direction images
-        image = sprite_sheet.get_image(0,0,24,15) # create starting image the frog starts with
+        image = sprite_sheet.get_image(0,0,24,15, WHITE) # create starting image the frog starts with
         image = pygame.transform.flip(image, True, False) # FLIP the image (so instead of looking left, now it looks in the right direction)
         image = pygame.transform.scale(image, (60,60)) # scale the image so it fits with other game sprites (Cars, etc)
         self.frog_walking_down.append(image) # add the starting image to the list (moving down)
-        image = sprite_sheet.get_image(0, 48, 30,24) # create the image var for down walking (get the x coord, y coord,width,height of the image in the SPRITE SHEET picture)
+        image = sprite_sheet.get_image(0, 48, 30,24, WHITE) # create the image var for down walking (get the x coord, y coord,width,height of the image in the SPRITE SHEET picture)
         image = pygame.transform.flip(image, True, False)
         image = pygame.transform.scale(image, (60, 60))
         self.frog_walking_down.append(image) # load the next down walking image to the list (moving down)
-        image = sprite_sheet.get_image(34,54, 34,17)
+        image = sprite_sheet.get_image(34,54, 34,17, WHITE)
         image = pygame.transform.flip(image, True, False)
         image = pygame.transform.scale(image,(60,60))
         self.frog_walking_down.append(image)
