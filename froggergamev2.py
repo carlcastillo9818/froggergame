@@ -334,7 +334,7 @@ def main():
                 keep the game going
             '''
 
-        
+
         pixels = 51 # number of pixels to add to the players x position or the cars x position
         # collision method 2 using x and y coordinates (more complex compared to the one below)
         for index, car in enumerate(all_enemy_automobiles):
@@ -350,8 +350,9 @@ def main():
                         (meaning that the frog is to the left but INSIDE of the car so that means collision)
                         '''
                         print("Players X position is " + str(playerFrog.getXPos()) + " and cars x position is " + str(car.getXPos()))
-                        playerFrog.setXPos(300)
+                        playerFrog.setXPos(300) # reset frogs position to the starting position at the beginning of the game
                         playerFrog.setYPos(840)
+                        playerFrog.decreaseFrogLives() # decrease the frogs lives after its been hit
 
         fps = font.render(str(int(clock.get_fps())), True, pygame.Color('white'))  # render fps counter
         livesShown = font.render("Lives : " + str(playerFrog.getFrogLivesCount()), True, BLACK,WHITE)  # render lives counter
@@ -364,7 +365,7 @@ def main():
 
 
         # --- Limit to 60 frames per second
-        clock.tick(6) # changed this to 6 to test out collision on 5-22-21, make sure to change it back to 60 when possible
+        clock.tick(60) # changed this to 6 to test out collision on 5-22-21, make sure to change it back to 60 when possible
     # Close the window and quit.
     pygame.quit()
 main()
