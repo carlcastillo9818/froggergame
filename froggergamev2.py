@@ -313,6 +313,28 @@ def main():
         update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_enemy_automobiles) # update the screen and game objects
         draw_game_objects(screen, all_sprites_list, all_background_locations) # draw game objects to the screen
 
+
+
+        '''
+        collision code method 1 (not SUPER accurate but it would work)
+        collisionOccurred = pygame.sprite.spritecollideany(playerFrog, all_enemy_automobiles)
+        if (collisionOccurred): # check if the cars have collided with the frog
+            print("hi")
+            playerFrog.setXPos(300)
+            playerFrog.setYPos(840)'''
+
+
+        '''check for collision (pseudocode)
+        if car has collided with frog
+            reset the frogs position to the beginning
+            update frog lives (decrement it so 5 -> 4)
+            if frog lives becomes 0
+                end the game and show game over screen or similar screen
+            else if frog lives is at least 1
+                keep the game going
+            '''
+
+        
         pixels = 51 # number of pixels to add to the players x position or the cars x position
         # collision method 2 using x and y coordinates (more complex compared to the one below)
         for index, car in enumerate(all_enemy_automobiles):
@@ -339,33 +361,10 @@ def main():
 
         pygame.display.update()  # update entire screen
 
-        '''
-        collision code method 1 (not SUPER accurate but it would work)
-        collisionOccurred = pygame.sprite.spritecollideany(playerFrog, all_enemy_automobiles)
-        if (collisionOccurred): # check if the cars have collided with the frog
-            print("hi")
-            playerFrog.setXPos(300)
-            playerFrog.setYPos(840)'''
 
 
-        '''check for collision (pseudocode)
-        if car has collided with frog
-            reset the frogs position to the beginning
-            update frog lives (decrement it so 5 -> 4)
-            if frog lives becomes 0
-                end the game and show game over screen or similar screen
-            else if frog lives is at least 1
-                keep the game going
-            '''
-        '''
-        come back to this later 5-18-21
-        for car in all_enemy_automobiles:
-            if(car.collidedWith(playerFrog)):
-                print("Your frog has been hit!!!")
-                playerFrog.decreaseFrogLives()
-        '''
         # --- Limit to 60 frames per second
-        clock.tick(6)
+        clock.tick(6) # changed this to 6 to test out collision on 5-22-21, make sure to change it back to 60 when possible
     # Close the window and quit.
     pygame.quit()
 main()
