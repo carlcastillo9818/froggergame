@@ -5,9 +5,7 @@ I got this class file from progrmaarcadegames.com so credits to them
 for this class file. It was appropriate to use in my game.
 """
 import pygame
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-
+from gameColors import * # import colors
 
 class SpriteSheet():
     """ Class used to grab images out of a sprite sheet. """
@@ -21,7 +19,7 @@ class SpriteSheet():
     def get_image(self, x, y, width, height, color):
         """ Grab a single image out of a larger spritesheet
             Pass in the x, y location of the sprite
-            and the width and height of the sprite. """
+            and the width and height of the sprite. Also pass in the color key for the surface"""
 
         # Create a new blank image
         image = pygame.Surface([width, height]).convert()
