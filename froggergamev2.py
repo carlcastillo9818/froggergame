@@ -6,9 +6,11 @@
     2. ADD SOMETHING TO THE GOAL LIKE A FLAG OR A FRUIT OR SOMETHING FOR THE FROG TO TOUCH AND END THE GAME
     3. FIND A WAY TO ADD SOUNDS (FOR THE CAR, OR BACKGROUND MUSIC, OR FROG SOUNDS)
 
+
     6-6-21 Work on adjusting lives system so it doesnt
     go into the negative values.  It will just be a game over when it reaches 0.
-
+    Added a game over screen!  Added a music file to the folder of the game so implement that
+    when you can.
 
     6-6-21 Implemented working collision between all cars and the frog finally!
 
@@ -290,7 +292,7 @@ def displayEndScreenText(screen):
     scaletuple = (80, 80)  # set scaling width and height for the frog img
     frogimage = sprite_sheet.get_image(0, 0, 24, 15, WHITE)  # create starting image the frog starts with
     frogimage = pygame.transform.scale(frogimage, scaletuple)  # scale the image to be bigger in game over screen
-    
+
     screen.blit(gameOverMessage, (100, 300))  # draw the game over msg to the screen
     screen.blit(continueMessage, (150, 400))  # draw the game over msg to the screen
     screen.blit(frogimage, (310,200)) # draw the frog image to the screen above the game over message
