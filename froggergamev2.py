@@ -2,13 +2,17 @@
      Pygame frogger game (1.3 build)
 
     TODO LIST:
-    1. ADD A POINT/LIVES SYSTEM TO KEEP TRACK OF PLAYER SCORE/LIVES
-    2. CONTINUE WORKING ON THE COLLISION DETECTION BETWEEN EACH CAR AND FROG,
-    3. ADD MOVING LOGS IN THE WATER FOR FROG TO JUMP ONTO AND NAVIGATE ACROSS TO THE GOAL
-    4. ADD SOMETHING TO THE GOAL LIKE A FLAG OR A FRUIT OR SOMETHING FOR THE FROG TO TOUCH AND END THE GAME
-    5. FIND A WAY TO ADD SOUNDS (FOR THE CAR, OR BACKGROUND MUSIC, OR FROG SOUNDS)
+    1. ADD MOVING LOGS IN THE WATER FOR FROG TO JUMP ONTO AND NAVIGATE ACROSS TO THE GOAL
+    2. ADD SOMETHING TO THE GOAL LIKE A FLAG OR A FRUIT OR SOMETHING FOR THE FROG TO TOUCH AND END THE GAME
+    3. FIND A WAY TO ADD SOUNDS (FOR THE CAR, OR BACKGROUND MUSIC, OR FROG SOUNDS)
 
-    5-18-21 Working on the points/lives system
+    6-6-21 Work on adjusting lives system so it doesnt
+    go into the negative values.  It will just be a game over when it reaches 0.
+
+
+    6-6-21 Implemented working collision between all cars and the frog finally!
+
+    5-18-21 Working on the points/lives system (I went with lives)
 
     5/4/21 - MADE SCREEN TALLER AND WIDER AND THEN ADJUSTED EVERYTHING TO SCALE! I ADDED ANOTHER ROAD AND ANOTHER GRASS SECTION.
     I ADDED A GOAL SPOT AT THE TOP (CURRENTLY PURPLE).
@@ -86,7 +90,7 @@ TO THE OBJECTIVES BELOW.
 
      ALSO RUN THE GAME NEXT TIME TO SEE YOUR PROGRESS BEFORE MAKING ANY CHANGES
 """
-import pygame
+import pygame, sys
 from Frog import *
 from Automobile import *
 from random import *
@@ -104,8 +108,6 @@ After the for loop, a collection of key movements are stored and if a key is pre
 move left,right,up,or down.  The function returns a boolean var that will end the game if the game is exitted or the player
 presses the escape key, otherwise it will continue running the game as long as it is false.
 '''
-
-
 def process_game_events(playableCharacter, endTheGame):
     # --- Main event loop
     for event in pygame.event.get():
@@ -137,8 +139,9 @@ def process_game_events(playableCharacter, endTheGame):
     elif keys[pygame.K_DOWN]:
         print("You went down by " + str(playableCharacter.change_y))  # shows how many times you are moving the character to the left (testing)
         playableCharacter.moveDown()
-
+    # event handlers for moving frog using arrow keys above ^^^
     # place keys under the for loop instead if you want CONTINUOUS MOVEMENT LIKE ASTEROIDS OR MARIO
+
     return endTheGame
 
 
@@ -148,8 +151,6 @@ More specifically, it runs a for loop that goes through the enemy sprites list, 
 left and which need to go right.  It adjusts enemy attributes like color, speed, x position along the way.  
 Then it checks wall boundaries and finally it updates the movable sprites list.
 '''
-
-
 def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesList, enemySpritesList):
     # --- Game logic should go here
     for index, car in enumerate(enemySpritesList):  # enumerate gets the index with the element as you iterate through the list of automobiles
@@ -168,7 +169,7 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
                 car.setXPos(-50)   # set x position of the car to come before the left side of the screen
 
         pixels = 51 # number of pixels to add to the players x position or the cars x position
-        # collision using x and y coordinates (more complex compared to the old one)
+        # collision using x and y coordinates (works better compared to the old one)
         if (playableCharacter.getYPos() == car.getYPos()):  # check if the frogs y position is equal to the cars y position (at the same y coordinate level)
             if ((playableCharacter.getXPos() > car.getXPos() and playableCharacter.getXPos() < (car.getXPos() + pixels)) or ((playableCharacter.getXPos() + pixels) > car.getXPos() and (playableCharacter.getXPos() + pixels) < (car.getXPos() + pixels))):
                 '''Check if the frogs x position is greater than the cars x position (meaning part of the frog is to the right)
@@ -176,8 +177,7 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
                 pixels (meaning part of the frog is to the left but INSIDE of the car so that means collision occurs).
                 The other condition to check is if the frogs x position plus some pixels is GREATER than the cars x position
                 (meaning part of the frog is to the right) AND the frogs x position plus some pixels is LESS than the cars x position plus some pixels
-                (meaning that part of the frog is to the left but INSIDE of the car so that means collision occurs)
-                '''
+                (meaning that part of the frog is to the left but INSIDE of the car so that means collision occurs)'''
                 print("Players X position is " + str(playableCharacter.getXPos()) + " and car " + str(index) + " x position is " + str(car.getXPos()))
                 playableCharacter.setXPos(300)  # reset frogs position to the starting position at the beginning of the game
                 playableCharacter.setYPos(840)
@@ -191,8 +191,6 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
         playableCharacter.rect.y = 840
     if (playableCharacter.rect.y < 0):  # top boundary
         playableCharacter.rect.y = 0
-
-    ''' event handlers for moving frog using arrow keys above ^^^.'''
 
     movableSpritesList.update()  # update the sprites in the list (this list gets updated because the sprites in here all move around)
     # because all the enemy cars are in this list, you dont need to update the other list (which has the same cars)
@@ -214,8 +212,6 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
 This function draws background objects to the screen, movable sprites to the screen, and then
 updates the entire screen with whats been drawn.  
 '''
-
-
 def draw_game_objects(screen, movableSpritesList, backgroundObjectsList):  # render things on screen
 
     # --- Drawing code should go here
@@ -243,8 +239,6 @@ def draw_game_objects(screen, movableSpritesList, backgroundObjectsList):  # ren
 This function runs a for loop that creates background road objects (black roads and yellow road marks for example),
 stores them in a list, and depending on the color argument, it changes x and y positions accordingly
 '''
-
-
 def makeRoads(screen, x_pos, y_pos, color, width, height, bg_list,num_of_objs):  # creates each background object FOR THIS SPECIFIC GAME (frogger)
     for x in range(num_of_objs):
         background_obj = RectBackground(screen, color, width, height, x_pos,y_pos)  # set surface, color, width, height, x pos, y pos
@@ -254,6 +248,52 @@ def makeRoads(screen, x_pos, y_pos, color, width, height, bg_list,num_of_objs): 
         elif (color == YELLOW):  # yellow will always be associated with background object that is a ROAD MARK
             x_pos += 100  # adjust yellow rectangles as necessary
 
+'''
+This function has a new game loop. This game loop checks if the user hits a certain button,
+if so, then it will bring them to a new game. If they hit another certain button, 
+it will end the game and close the game window.'''
+def endScreen(screen):
+    # new game loop
+    run = True # Used in the secondary game Loop, true until the user clicks the close button or escape key.
+
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                sys.exit()  # stops the program so surface cannot be changed after quitting
+                break
+            if event.type == pygame.KEYDOWN:  # if the user presses down on a key
+                if event.key == pygame.K_n:  # Pressing the n Key will quit the game
+                    run = False
+                    sys.exit() # stops the program so surface cannot be changed after quitting
+                    break
+                elif event.key == pygame.K_y: # Pressing the y key will reset the game
+                    main() # call the main method to run again (acts like the game was reset after a game over!)
+                    break
+        screen.fill(BLACK) # clears the old screen and allows new things to be drawn
+
+
+        displayEndScreenText(screen)
+
+        pygame.display.update() # updates the entire screen (no args were passed)
+
+"""This function provides the text to be displayed in the game over screen.
+A game over and continue text prompts will be rendered and blitted to the screen!"""
+def displayEndScreenText(screen):
+    font = pygame.font.Font("VarelaRound-Regular.ttf", 100)  # set type of font and the font size
+    gameOverMessage = font.render("Game Over!", True, WHITE)  # display that the game is over
+
+    font2 = pygame.font.Font("VarelaRound-Regular.ttf", 50)  # set type of font and the font size
+    continueMessage = font2.render("Continue? (Y/N)", True, WHITE)  # display continue msg
+
+    sprite_sheet = SpriteSheet("GreenFrog.png") # sprite sheet to retrieve the frog image from
+    scaletuple = (80, 80)  # set scaling width and height for the frog img
+    frogimage = sprite_sheet.get_image(0, 0, 24, 15, WHITE)  # create starting image the frog starts with
+    frogimage = pygame.transform.scale(frogimage, scaletuple)  # scale the image to be bigger in game over screen
+    
+    screen.blit(gameOverMessage, (100, 300))  # draw the game over msg to the screen
+    screen.blit(continueMessage, (150, 400))  # draw the game over msg to the screen
+    screen.blit(frogimage, (310,200)) # draw the frog image to the screen above the game over message
 
 def main():
     SCREEN_HEIGHT = 900  # Set the width and height of the screen [width, height]
@@ -314,8 +354,9 @@ def main():
     all_enemy_automobiles.add(car1, car2, car3, car4,car5)  # add the cars to the list of automobiles
     all_background_locations.add( grass1, grass2, grass3, water1,goalspot)  # add grass and water objects to background locations list '''
 
-    # Loop until the user clicks the close button.
+    # Used in the main game Loop, false until the user clicks the close button or escape key.
     done = False
+
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
 
@@ -327,8 +368,12 @@ def main():
         done = process_game_events(playerFrog, done) # process game events (like the frog moving)
         update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_enemy_automobiles) # update the screen and game objects
         draw_game_objects(screen, all_sprites_list, all_background_locations) # draw game objects to the screen
+
         fps = font.render(str(int(clock.get_fps())), True, pygame.Color('white'))  # render fps counter
         livesShown = font.render("Lives : " + str(playerFrog.getFrogLivesCount()), True, BLACK,WHITE)  # render lives counter
+
+        if(playerFrog.getFrogLivesCount() <= 0): # players lives are 0 or less than 0
+            endScreen(screen) # change screens to the game over screen
 
         screen.blit(fps, (50, 50))  # draw the fps counter to the screen
         screen.blit(livesShown, (0,0))  # draw the lives counter to the screen
