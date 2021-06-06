@@ -167,6 +167,21 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
                 car.repaint()  # make the car a different color each time it passes the screen to make it look like a new car is coming
                 car.setXPos(-50)   # set x position of the car to come before the left side of the screen
 
+        pixels = 51 # number of pixels to add to the players x position or the cars x position
+        # collision using x and y coordinates (more complex compared to the old one)
+        if (playableCharacter.getYPos() == car.getYPos()):  # check if the frogs y position is equal to the cars y position (at the same y coordinate level)
+            if ((playableCharacter.getXPos() > car.getXPos() and playableCharacter.getXPos() < (car.getXPos() + pixels)) or ((playableCharacter.getXPos() + pixels) > car.getXPos() and (playableCharacter.getXPos() + pixels) < (car.getXPos() + pixels))):
+                '''Check if the frogs x position is greater than the cars x position (meaning part of the frog is to the right)
+                AND that the frogs x position is also less than the cars x position plus some 
+                pixels (meaning part of the frog is to the left but INSIDE of the car so that means collision occurs).
+                The other condition to check is if the frogs x position plus some pixels is GREATER than the cars x position
+                (meaning part of the frog is to the right) AND the frogs x position plus some pixels is LESS than the cars x position plus some pixels
+                (meaning that part of the frog is to the left but INSIDE of the car so that means collision occurs)
+                '''
+                print("Players X position is " + str(playableCharacter.getXPos()) + " and car " + str(index) + " x position is " + str(car.getXPos()))
+                playableCharacter.setXPos(300)  # reset frogs position to the starting position at the beginning of the game
+                playableCharacter.setYPos(840)
+                playableCharacter.decreaseFrogLives()  # decrease the frogs lives after its been hit
 
     if (playableCharacter.rect.x < 0):  # left wall boundary
         playableCharacter.rect.x = 0
@@ -312,48 +327,6 @@ def main():
         done = process_game_events(playerFrog, done) # process game events (like the frog moving)
         update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_enemy_automobiles) # update the screen and game objects
         draw_game_objects(screen, all_sprites_list, all_background_locations) # draw game objects to the screen
-
-
-
-        '''
-        collision code method 1 (not SUPER accurate but it would work)
-        collisionOccurred = pygame.sprite.spritecollideany(playerFrog, all_enemy_automobiles)
-        if (collisionOccurred): # check if the cars have collided with the frog
-            print("hi")
-            playerFrog.setXPos(300)
-            playerFrog.setYPos(840)'''
-
-
-        '''check for collision (pseudocode)
-        if car has collided with frog
-            reset the frogs position to the beginning
-            update frog lives (decrement it so 5 -> 4)
-            if frog lives becomes 0
-                end the game and show game over screen or similar screen
-            else if frog lives is at least 1
-                keep the game going
-            '''
-
-
-        pixels = 51 # number of pixels to add to the players x position or the cars x position
-        # collision method 2 using x and y coordinates (more complex compared to the one below)
-        for index, car in enumerate(all_enemy_automobiles):
-            # check first car colliding with frog
-            if(index == 0):
-                if(playerFrog.getYPos() == car.getYPos()): # check if the frogs y position is equal to the cars y position (at the same y coordinate level)
-                    if ((playerFrog.getXPos() > car.getXPos() and playerFrog.getXPos() < (car.getXPos() + pixels)) or ((playerFrog.getXPos() + pixels) > car.getXPos() and (playerFrog.getXPos() + pixels) < (car.getXPos() + pixels))):
-                        '''Check if the frogs x position is greater than the cars x position (meaning frog is to the right)
-                        AND that the frogs x position is also less than the cars x position plus some 
-                        pixels (meaning the frog is to the left but INSIDE of the car so that means collision).
-                        The other condition to check is if the frogs x position plus some pixels is GREATER than the cars x position
-                        (meaning frog is to the right) AND the frogs x position plus some pixels is LESS than the cars x position plus some pixels
-                        (meaning that the frog is to the left but INSIDE of the car so that means collision)
-                        '''
-                        print("Players X position is " + str(playerFrog.getXPos()) + " and cars x position is " + str(car.getXPos()))
-                        playerFrog.setXPos(300) # reset frogs position to the starting position at the beginning of the game
-                        playerFrog.setYPos(840)
-                        playerFrog.decreaseFrogLives() # decrease the frogs lives after its been hit
-
         fps = font.render(str(int(clock.get_fps())), True, pygame.Color('white'))  # render fps counter
         livesShown = font.render("Lives : " + str(playerFrog.getFrogLivesCount()), True, BLACK,WHITE)  # render lives counter
 
