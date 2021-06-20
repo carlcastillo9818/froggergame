@@ -170,7 +170,8 @@ class Frog(pygame.sprite.Sprite):
         frame = (self.rect.y // 40) % len(self.frog_walking_up)  # calculate frame for the current image
         self.image = self.frog_walking_up[frame]  # set the frogs image to a new image [position is frames value]
 
-        print(self.rect.y)  # check current y position after moving (change_y) speed
+        print("Current Y Pos for Frog is " + str(self.rect.y))  # check current y position after moving (change_y) speed
+        print("Current X Pos for Frog is " + str(self.rect.x))  # check current x position after moving (change_x) speed
 
     def moveDown(self):# move frog down (using the y speed vector value)
         self.change_y = 60

@@ -1,16 +1,21 @@
 """
-     Pygame frogger game (1.3 build)
+     Pygame frogger game (1.5 build)
 
     TODO LIST:
-    1. ADD MOVING LOGS IN THE WATER FOR FROG TO JUMP ONTO AND NAVIGATE ACROSS TO THE GOAL
-    2. ADD SOMETHING TO THE GOAL LIKE A FLAG OR A FRUIT OR SOMETHING FOR THE FROG TO TOUCH AND END THE GAME
-    3. FIND A WAY TO ADD SOUNDS (FOR THE CAR, OR BACKGROUND MUSIC, OR FROG SOUNDS)
+    1. Work on if log goes off screen, frog should be reset back to starting position and lose a life.
+    Also if log goes off screen and frog has 1 life, then it should go to game over screen.
+    2. ADD SOMETHING TO THE GOAL LIKE A FLAG OR A FRUIT OR SOMETHING FOR THE FROG TO TOUCH AND END THE GAME.
+    3. ADD A START MENU/PLAY MENU SCREEN BEFORE THE GAME STARTS RUNNING.
+    3. FIND A WAY TO ADD SOUNDS (FOR THE CAR, OR BACKGROUND MUSIC, OR FROG SOUNDS).
 
 
-    6-6-21 Work on adjusting lives system so it doesnt
+    6-20-21 ADDED SEVERAL MOVING LOGS IN THE WATER FOR FROG TO JUMP ONTO AND NAVIGATE ACROSS TO THE GOAL.  ALSO
+    I CREATED A NEW CLASS CALLED RIVERLOG SO I COULD MAKE LOG OBJECTS TO ADD TO A LIST OF LOGS BELOW.
+
+    6-6-21 Fixed lives system so it doesnt
     go into the negative values.  It will just be a game over when it reaches 0.
     Added a game over screen!  Added a music file to the folder of the game so implement that
-    when you can.
+    when you can. (Finished all this)
 
     6-6-21 Implemented working collision between all cars and the frog finally!
 
@@ -43,7 +48,6 @@
     OR RIGHT WALL THEN ITS A DIFFERENT COLORED CAR SPRITE! I MOVED ON FROM USING THE SIMPLE RECTANGLE SHAPES!
 
     3/27/21  Added another water rectangle to the game, added up/down animations for the frog, added INITIAL car image for each car.
-
 
     3/21/21 Added water rectangle, another car, and another road to the game!
 
@@ -84,7 +88,6 @@ TO THE OBJECTIVES BELOW.
 
     3/1/21 LAST THING YOU WORKED ON WAS ROADMARKS (THE YELLOW MARKS ON THE ROADS)
 
-
     2/28/21 NEXT TIME, WORK ON THE COLLISION DETECTION BETWEEN EACH CAR AND FROG,
      ADD ROADS, ADD BETTER SPACING BETWEEN EVERY SPRITE, FIND OR MAKE YOUR OWN CAR SPRITES, AND FIND A WAY TO ADD
      SOUNDS (FOR THE CAR, OR BACKGROUND MUSIC, OR FROG SOUNDS), AND ADD A POINT SYSTEM TO KEEP TRACK OF PLAYER SCORE,
@@ -95,6 +98,7 @@ TO THE OBJECTIVES BELOW.
 import pygame, sys
 from Frog import *
 from Automobile import *
+from RiverLog import *
 from random import *
 from RectBackground import *
 from gameColors import *
@@ -150,27 +154,67 @@ def process_game_events(playableCharacter, endTheGame):
 '''
 This function updates all objects that need to be updated, e.g. position changes, physics, all that other stuff.
 More specifically, it runs a for loop that goes through the enemy sprites list, checks for which enemies need to go
-left and which need to go right.  It adjusts enemy attributes like color, speed, x position along the way.  
-Then it checks wall boundaries and finally it updates the movable sprites list.
+left and which need to go right.  It adjusts enemy attributes like color, speed, x position along the way. It also adjusts
+river log attributes like their direction and speed.  Then it checks wall boundaries and finally it updates the movable sprites list.
 '''
-def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesList, enemySpritesList):
+def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesList, enemySpritesList, riverLogSpritesList):
+
+
     # --- Game logic should go here
+
+    for index,log in enumerate(riverLogSpritesList):
+        if (index % 2 != 0):  # check if the index / 2 remainder is NOT 0, if true then every ODD index or water log should come from the right side of the screen and MOVE LEFT
+            log.moveLeft()  # make the log drive to the left
+            if (log.rect.x < -100):  # check if the logs x position is less than the left side of the screen (0 or any neg value)
+                # randint and choice come from the random library but you dont need to include the word random in front because I imported * from random
+                log.changeSpeed(randint(3,4)) #adjust speed
+                log.setXPos(700)   # set x position of the river log to come before the right side of the screen
+        else:  # remainder is 0 so cars will come from the left side of the screen, hence they will move RIGHT
+            log.moveRight()  # make the river log move to the right
+            if (log.rect.x > SCREEN_WIDTH):  # check if the river logs x position is greater than the right side of the screen
+                log.changeSpeed(randint(3, 4))  # adjust speed
+                log.setXPos(-50)  # set x position of the log to come before the left side of the screen
+        # LOG STUFF TEST HERE
+        pixels = 10 # number of pixels to add to the players x position or the logs x position
+        # collision using x and y coordinates (works better compared to the old one)
+        if (playableCharacter.getYPos() == log.getYPos()):  # check if the frogs y position is equal to the logs y position (at the same y coordinate level)
+            print("frog and log have same Y POSITION!!!") # test message for debugging and testing purposes
+            if ((playableCharacter.getXPos() > log.getXPos() and playableCharacter.getXPos() < (log.getXPos() + pixels)) or ((playableCharacter.getXPos() + pixels) > log.getXPos() and (playableCharacter.getXPos() + pixels) < (log.getXPos() + pixels))):
+                playableCharacter.setXPos(log.getXPos()) # set frogs x pos to the logs x pos
+                playableCharacter.setYPos(log.getYPos()) # set frogs y pos to the logs y pos
+                if (playableCharacter.rect.x > 670):  # right wall boundary
+                    playableCharacter.setXPos(300)
+                    playableCharacter.setYPos(840)
+        '''
+        FROG AND LOG PSEUDOCODE STUFF
+        When Frog steps on a log, the frogs x and y position should follow the logs x and y position until it STEPS OFF.
+        Frog steps on Log (ACCOMPLISHED!)
+        Frog remains on log by having its x and y position continue to match the logs x and y position (ACCOMPLISHED!)
+        If log goes off screen, frog should be reset back to starting position and lose a life (WORK ON THIS)
+        If log goes off screen and frog has 1 life, then it should go to game over screen (WORK ON THIS)
+        If frog steps off log and steps on grass or another log then its x and y position will be adjusted accordingly (ACCOMPLISHED!)
+        '''
+        # END LOG TESTS HERE
+
     for index, car in enumerate(enemySpritesList):  # enumerate gets the index with the element as you iterate through the list of automobiles
         if (index % 2 != 0):  # check if the index / 2 remainder is NOT 0, if true then every ODD index or vehicle should come from the right side of the screen and MOVE LEFT
             car.moveLeft()  # make the car drive to the left
             if (car.rect.x < -100):  # check if the cars x position is less than the left side of the screen (0 or any neg value)
                 # randint and choice come from the random library but you dont need to include the word random in front because I imported * from random
-                car.changeSpeed(randint(6, 8))
+                car.changeSpeed(randint(6, 8)) #adjust speed
                 car.repaint() # make the car a different color each time it passes the screen to make it look like a new car is coming
                 car.setXPos(800)   # set x position of the car to come before the right side of the screen
         else:  # remainder is 0 so cars will come from the left side of the screen, hence they will move RIGHT
             car.moveRight()  # make the car drive to the right
             if (car.rect.x > SCREEN_WIDTH):  # check if the cars x position is greater than the right side of the screen
-                car.changeSpeed(randint(6, 8))
+                car.changeSpeed(randint(6, 8)) # adjust speed
                 car.repaint()  # make the car a different color each time it passes the screen to make it look like a new car is coming
                 car.setXPos(-50)   # set x position of the car to come before the left side of the screen
 
+
+
         pixels = 51 # number of pixels to add to the players x position or the cars x position
+
         # collision using x and y coordinates (works better compared to the old one)
         if (playableCharacter.getYPos() == car.getYPos()):  # check if the frogs y position is equal to the cars y position (at the same y coordinate level)
             if ((playableCharacter.getXPos() > car.getXPos() and playableCharacter.getXPos() < (car.getXPos() + pixels)) or ((playableCharacter.getXPos() + pixels) > car.getXPos() and (playableCharacter.getXPos() + pixels) < (car.getXPos() + pixels))):
@@ -184,6 +228,7 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
                 playableCharacter.setXPos(300)  # reset frogs position to the starting position at the beginning of the game
                 playableCharacter.setYPos(840)
                 playableCharacter.decreaseFrogLives()  # decrease the frogs lives after its been hit
+
 
     if (playableCharacter.rect.x < 0):  # left wall boundary
         playableCharacter.rect.x = 0
@@ -260,7 +305,7 @@ def endScreen(screen):
 
     while run:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT: # if user closes the window by pressing RED X button
                 run = False
                 sys.exit()  # stops the program so surface cannot be changed after quitting
                 break
@@ -273,11 +318,8 @@ def endScreen(screen):
                     main() # call the main method to run again (acts like the game was reset after a game over!)
                     break
         screen.fill(BLACK) # clears the old screen and allows new things to be drawn
-
-
-        displayEndScreenText(screen)
-
-        pygame.display.update() # updates the entire screen (no args were passed)
+        displayEndScreenText(screen) # call the method to display a game over screen
+        pygame.display.update() # updates the ENTIRE screen (no args were passed)
 
 """This function provides the text to be displayed in the game over screen.
 A game over and continue text prompts will be rendered and blitted to the screen!"""
@@ -312,12 +354,13 @@ def main():
     # EXCLUDE THIS, I DECIDED TO MAKE MY OWN BACKGROUND 3/1/21 create custom background object (the background of the game)
     # gameBackground = Background('backgroundForGame(MadebyMe)V1.png', [0,0])
 
-    all_sprites_list = pygame.sprite.Group()  # This will be a list that will contain all the character sprites we intend to use in our game.
-    all_background_locations = pygame.sprite.Group()  # This will be a list that will contain all the roads, grass fields, and rivers we need for our game
-    all_enemy_automobiles = pygame.sprite.Group()  # This will be a list that will contain all the ENEMY automobile sprites we intend to use in our game.
+    all_sprites_list = pygame.sprite.Group()  # This will be a list that will contain all the character sprites for the game.
+    all_background_locations = pygame.sprite.Group()  # This will be a list that will contain all the roads, grass fields, and rivers for the game
+    all_enemy_automobiles = pygame.sprite.Group()  # This will be a list that will contain all the ENEMY automobile sprites for the game.
+    all_riverLogs = pygame.sprite.Group() # A list that contains all the river objects (logs) for the game
 
     # create your main character object (a frog in this case!)
-    playerFrog = Frog(DARK_GREEN, 300,840, 60,60)  # set frogs color,x,y positions, width,height, (in that order). Y pos has to be 440 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
+    playerFrog = Frog(DARK_GREEN, 300,840, 60,60)  # set frogs color,x,y positions, width,height, (in that order). Y pos has to be 840 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
     print(playerFrog.rect.x)
     print(playerFrog.rect.y)
 
@@ -328,6 +371,13 @@ def main():
     car4 = Automobile(80, 60, randint(6, 7), 700, 540, "Left")
     car5 = Automobile(80, 60, randint(6,7), -100, 480, "Right")
 
+    # create moving log objects (width, height, speed, x pos, y pos, direction of log img)
+    log1 = RiverLog(80,80,randint(3,4),100,360, "Right")
+    log2 = RiverLog(80,80,randint(3,4), 700, 300, "Left")
+    log3 = RiverLog(80,80,randint(3,4), 100, 240, "Right")
+    log4 = RiverLog(80,80,randint(3,4), 700, 180, "Left")
+    log5 = RiverLog(80,80,randint(3,4), 700, 120, "Right")
+    log6 = RiverLog(80, 80, randint(3, 4), 700, 60, "Left")
 
     # make multiple road objects (surface, xpos, ypos, color, width, height, background list, number of objects)
     makeRoads(screen, 0, 780, BLACK, SCREEN_WIDTH, 60, all_background_locations, 2)
@@ -352,9 +402,10 @@ def main():
     goalspot = RectBackground(screen, PURPLE, SCREEN_WIDTH / 2,60,175,0)
 
     # add all objects to the correct lists here
-    all_sprites_list.add(playerFrog, car1, car2, car3, car4, car5)  # add all game sprites to the list of game sprites
+    all_sprites_list.add(car1, car2, car3, car4, car5,log1,log2, log3, log4,log5,log6,playerFrog)  # add all moving game objects to the list of game sprites
     all_enemy_automobiles.add(car1, car2, car3, car4,car5)  # add the cars to the list of automobiles
-    all_background_locations.add( grass1, grass2, grass3, water1,goalspot)  # add grass and water objects to background locations list '''
+    all_background_locations.add(grass1, grass2, grass3, water1,goalspot)  # add grass and water objects to background locations list '''
+    all_riverLogs.add(log1, log2,log3,log4,log5,log6) # add log objects to the list of river logs
 
     # Used in the main game Loop, false until the user clicks the close button or escape key.
     done = False
@@ -368,7 +419,7 @@ def main():
     # -------- Main Program Loop -----------
     while not done:
         done = process_game_events(playerFrog, done) # process game events (like the frog moving)
-        update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_enemy_automobiles) # update the screen and game objects
+        update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_enemy_automobiles, all_riverLogs) # update the screen and game objects
         draw_game_objects(screen, all_sprites_list, all_background_locations) # draw game objects to the screen
 
         fps = font.render(str(int(clock.get_fps())), True, pygame.Color('white'))  # render fps counter
@@ -381,8 +432,6 @@ def main():
         screen.blit(livesShown, (0,0))  # draw the lives counter to the screen
 
         pygame.display.update()  # update entire screen
-
-
 
         # --- Limit to 60 frames per second
         clock.tick(60) # changed this to 6 to test out collision on 5-22-21, make sure to change it back to 60 when possible
