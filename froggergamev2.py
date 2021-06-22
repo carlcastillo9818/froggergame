@@ -442,7 +442,7 @@ def main():
         fps = font.render(str(int(clock.get_fps())), True, pygame.Color('white'))  # render fps counter
         livesShown = font.render("Lives : " + str(playerFrog.getFrogLivesCount()), True, BLACK,WHITE)  # render lives counter
 
-        if(playerFrog.getFrogLivesCount() <= 0): # players lives are 0 or less than 0
+        if playerFrog.getFrogLivesCount() <= 0: # players lives are 0 or less than 0
             endScreen(screen) # change screens to the game over screen
 
         screen.blit(fps, (50, 50))  # draw the fps counter to the screen
