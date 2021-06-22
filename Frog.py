@@ -17,9 +17,11 @@ class Frog(pygame.sprite.Sprite):
         self.width = width
         self.height = height
         self.color = color
+
         # set speed vector of player
         self.change_x = 0
         self.change_y = 0
+
         # this list holds all the images for animated walk left of the Frog
         self.frog_walking_left = []
         # this list holds all the images for animated walk right of the frog
