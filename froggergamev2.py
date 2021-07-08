@@ -3,10 +3,13 @@
 
     TODO LIST:
     1. ADD A START MENU/PLAY MENU SCREEN BEFORE THE GAME STARTS RUNNING.
-    2. FIND A WAY TO ADD SOUNDS (FOR THE CAR, OR BACKGROUND MUSIC, OR FROG SOUNDS).
+    2. FIND A WAY TO ADD SOUNDS (CAR SOUNDS, FROG SOUNDS, OR JUST BACKGROUND MUSIC WOULD BE FINE).
 
-
-    Next time, work on making the dragonfly move from goalpost to goalpost so that the player has to be careful when
+    7-8-21 Focus on fine tuning the collision between the frog, the dragonfly, and each goal post.  Make sure high scores
+    get updated and lives get updated correctly.  After all that is finished then you can focus on implementing sound
+    and MAYBE a start menu but its not necessary for this project.
+    
+    6-??-21 Next time, work on making the dragonfly move from goalpost to goalpost so that the player has to be careful when
     moving their frog to the goals.  If the frog succeeds in getting the dragonfly, the players high score should go up.
     If the frog misses the dragonfly, they will fall into the goalpost (frog home) and be reset to the starting position
     , and if they are out of lives then its GAME OVER!
@@ -162,17 +165,48 @@ def process_game_events(playableCharacter, endTheGame):
 
 '''
 This function updates all objects that need to be updated, e.g. position changes, physics, all that other stuff.
-More specifically, it runs a for loop that goes through the enemy sprites list, checks for which enemies need to go
-left and which need to go right.  It adjusts enemy attributes like color, speed, x position along the way. It also adjusts
-river log attributes like their direction and speed.  Then it checks wall boundaries and finally it updates the movable sprites list.
+More specifically, it checks for which enemies need to go left and which need to go right.  It adjusts enemy attributes 
+like color, speed, x position along the way. It also adjusts river log attributes like their direction and speed.  
+Then it checks wall boundaries and finally it updates the movable sprites list.
 '''
-def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesList, enemySpritesList, riverLogSpritesList):
+def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesList, enemySpritesList, riverLogSpritesList, insectToEat, goalPosts):
     # --- Game logic should go in this function
+
+    '''Next time, work on making the dragonfly move from goalpost to goalpost so that the player has to be careful when
+    moving their frog to the goals.  If the frog succeeds in getting the dragonfly, the players high score should go up
+    by a bonus amount in addition to reaching the goal posts which also raises the high score. If the frog misses the dragonfly,
+    they can still earn points by reaching one of the goalposts (frog home) and be reset to the starting position
+    , and if they are out of lives then its GAME OVER!'''
+
+    insectToEat.teleportAround() # call the method to make the insect move to each goal post
+    if playableCharacter.getYPos() == insectToEat.getYPos():  # check if the frogs y position is equal to the dragonfly y position (at the same y coordinate level)
+        pixels = 20  # number of pixels to add to the players x position or the logs x position
+        print("frog and dragonfly have same Y POSITION!!!")  # test message for debugging and testing purposes
+        if (insectToEat.getXPos() < playableCharacter.getXPos() < (
+                insectToEat.getXPos() + pixels)) or (
+                insectToEat.getXPos() < (playableCharacter.getXPos() + pixels) < (
+                insectToEat.getXPos() + pixels)):
+
+            print("Frog and dragonfly have same x position (collision occurring!)")
+            playableCharacter.bonusHighScore() # give a bonus high score to the frog (in addition to their regular high score)
+            playableCharacter.setXPos(300)  # move the frog back to its default position
+            playableCharacter.setYPos(840)
+
+    for index,goal in enumerate(goalPosts):
+        pixels = 60  # number of pixels to add to the players x position or the goals x position
+        # collision using x and y coordinates
+        if playableCharacter.getYPos() == goal.getYPos():  # check if the frogs y position is equal to the caves y position (at the same y coordinate level)
+            if (goal.getXPos() < playableCharacter.getXPos() < (goal.getXPos() + pixels)) or (
+                    goal.getXPos() < (playableCharacter.getXPos() + pixels) < (goal.getXPos() + pixels)):
+                playableCharacter.increaseHighScore() # increase the frogs high score
+                playableCharacter.setXPos(300)  # move the frog back to its default position
+                playableCharacter.setYPos(840)
+
+
     for index,log in enumerate(riverLogSpritesList):
         pixels = 100 # number of pixels to add to the players x position or the logs x position
         # collision using x and y coordinates
         if playableCharacter.getYPos() == log.getYPos():  # check if the frogs y position is equal to the logs y position (at the same y coordinate level)
-            print("frog and log have same Y POSITION!!!") # test message for debugging and testing purposes
             if (playableCharacter.getXPos() > log.getXPos() and playableCharacter.getXPos() < (log.getXPos() + pixels)) or ((playableCharacter.getXPos() + pixels) > log.getXPos() and (playableCharacter.getXPos() + pixels) < (log.getXPos() + pixels)):
                 playableCharacter.setXPos(log.getXPos()) # set frogs x pos to the logs x pos
                 if log.getXPos() > 690 or log.getXPos() < -55: # as soon as log leaves the screen (the left or right sides)
@@ -182,7 +216,6 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
                         playableCharacter.decreaseFrogLives() # Frog loses a life
                     else: # frog has no more lives
                         endScreen() # call the game over screen function
-
             else:
                 '''Frog isnt on a log which means it must be touching the water blocks near the log, so reset frogs position'''
                 playableCharacter.setXPos(300)  # reset frogs position to the starting position at the beginning of the game
@@ -193,12 +226,12 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
                     endScreen()  # call the game over screen function
 
         if index % 2 != 0:  # check if the index / 2 remainder is NOT 0, if true then every ODD index or water log should come from the right side of the screen and MOVE LEFT
-            log.moveLeft()  # make the log drive to the left
+            log.moveLeft()  # make the log move to the left
             if log.getXPos() < -100:  # check if the logs x position is less than the left side of the screen (0 or any neg value)
                 # randint and choice come from the random library but you dont need to include the word random in front because I imported * from random
                 log.changeSpeed(randint(3,4)) #adjust speed
                 log.setXPos(700)   # set x position of the river log to come before the right side of the screen
-        else:  # remainder is 0 so cars will come from the left side of the screen, hence they will move RIGHT
+        else:  # remainder is 0 so logs will come from the left side of the screen, hence they will move RIGHT
             log.moveRight()  # make the river log move to the right
             if log.getXPos() > SCREEN_WIDTH:  # check if the river logs x position is greater than the right side of the screen
                 log.changeSpeed(randint(3, 4))  # adjust speed
@@ -231,7 +264,6 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
                 The other condition to check is if the frogs x position plus some pixels is GREATER than the cars x position
                 (meaning part of the frog is to the right) AND the frogs x position plus some pixels is LESS than the cars x position plus some pixels
                 (meaning that part of the frog is to the left but INSIDE of the car so that means collision occurs)'''
-                print("Players X position is " + str(playableCharacter.getXPos()) + " and car " + str(index) + " x position is " + str(car.getXPos()))
                 playableCharacter.setXPos(300)  # reset frogs position to the starting position at the beginning of the game
                 playableCharacter.setYPos(840)
                 playableCharacter.decreaseFrogLives()  # decrease the frogs lives after its been hit
@@ -364,11 +396,10 @@ def main():
     all_background_locations = pygame.sprite.Group()  # This will be a list that will contain all the roads, grass fields, and rivers for the game
     all_enemy_automobiles = pygame.sprite.Group()  # This will be a list that will contain all the ENEMY automobile sprites for the game.
     all_riverLogs = pygame.sprite.Group() # A list that contains all the river objects (logs) for the game
+    all_goalPosts = pygame.sprite.Group()   # A list that contains all the goal related objects (caves/rocks) for the game
 
     # create your main character object (a frog in this case!)
-    playerFrog = Frog(DARK_GREEN, 300,420, 60,60)  # set frogs color,x,y positions, width,height, (in that order). Y pos has to be 840 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
-    print(playerFrog.rect.x)
-    print(playerFrog.rect.y)
+    playerFrog = Frog(DARK_GREEN, 30,0, 60,60)  # set frogs color,x,y positions, width,height, (in that order). Y pos has to be 840 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
 
     # create dragonfly object (this will be the object that gets eaten by the frog to build their high score!!!)
     dragonFly = DragonFly(50,50,150,0)
@@ -423,6 +454,7 @@ def main():
     all_enemy_automobiles.add(car1, car2, car3, car4,car5)  # add the cars to the list of automobiles
     all_background_locations.add(grass1, grass2, grass3, water1,goalspot1, goalspot2,goalspot3, goalspot4,rock1,rock2, rock3)  # add grass and water objects to background locations list '''
     all_riverLogs.add(log1, log2,log3,log4,log5,log6) # add log objects to the list of river logs
+    all_goalPosts.add(goalspot1,goalspot2, goalspot3,goalspot4) # add all the goal objects to the goal list
 
     # Used in the main game Loop, false until the user clicks the close button or escape key.
     done = False
@@ -431,22 +463,24 @@ def main():
     clock = pygame.time.Clock()
 
     # a font for the on screen text (two parameters -> filename (a .ttf font file), font size)
-    font = pygame.font.Font("VarelaRound-Regular.ttf", 30)
+    font = pygame.font.Font("VarelaRound-Regular.ttf", 15)
 
     # -------- Main Program Loop -----------
     while not done:
         done = process_game_events(playerFrog, done) # process game events (like the frog moving)
-        update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_enemy_automobiles, all_riverLogs) # update the screen and game objects
+        update_game_objects(screen, SCREEN_WIDTH, playerFrog, all_sprites_list, all_enemy_automobiles, all_riverLogs, dragonFly, all_goalPosts) # update the screen and game objects
         draw_game_objects(screen, all_sprites_list, all_background_locations) # draw game objects to the screen
 
-        fps = font.render(str(int(clock.get_fps())), True, pygame.Color('white'))  # render fps counter
+        #fps = font.render(str(int(clock.get_fps())), True, pygame.Color('white'))  # render fps counter
         livesShown = font.render("Lives : " + str(playerFrog.getFrogLivesCount()), True, BLACK,WHITE)  # render lives counter
+        scoreShown = font.render("High Score : " + str(playerFrog.getFrogHighScore()), True, BLACK, WHITE) # render score counter
 
         if playerFrog.getFrogLivesCount() <= 0: # players lives are 0 or less than 0
             endScreen(screen) # change screens to the game over screen
 
-        screen.blit(fps, (50, 50))  # draw the fps counter to the screen
+        #screen.blit(fps, (50, 50))  # draw the fps counter to the screen
         screen.blit(livesShown, (0,0))  # draw the lives counter to the screen
+        screen.blit(scoreShown, (0,40))
 
         pygame.display.update()  # update entire screen
 

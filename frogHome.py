@@ -25,12 +25,17 @@ class FrogHome(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-    def setXPos(self, x):  # set the x position of the rectangle field
+    def setXPos(self, x):  # set the x position
         self.rect.x = x
 
-    def setYPos(self, y):  # set the y position of the rectangle field
+    def setYPos(self, y):  # set the y position
         self.rect.y = y
 
+    def getXPos(self): # get the x position
+        return self.rect.x
+
+    def getYPos(self):  # get the y position
+        return self.rect.y
 
     def loadFrogHomeSprite(self):  # load the image of the frogs home (should look like a cave like in the real frogger game)
         sprite_sheet = SpriteSheet("Kauzz Cave Tiles/Environment.png")  # load in the sprite sheet

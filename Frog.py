@@ -105,6 +105,18 @@ class Frog(pygame.sprite.Sprite):
         # frog lives (initially 5)
         self.lives = 5
 
+        # frog high score (initially 0)
+        self.highScore = 0
+
+    def getFrogHighScore(self): # returns high score of the frog
+        return self.highScore
+
+    def increaseHighScore(self): # increase high score for the frog
+        self.highScore += 100
+
+    def bonusHighScore(self): # increase high score for the frog (but this one is a bonus in addition to the regular increase if the frog catches the dragonfly)
+        self.highScore += 300
+
     def getFrogLivesCount(self): # returns the frogs current number of lives
         return self.lives
 

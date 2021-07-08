@@ -31,6 +31,11 @@ class RockTerrain(pygame.sprite.Sprite):
     def setYPos(self, y):  # set the y position of the rectangle field
         self.rect.y = y
 
+    def getXPos(self): # get the x position
+        return self.rect.x
+
+    def getYPos(self):  # get the y position
+        return self.rect.y
 
     def loadRockSprite(self):  # load the image of the rock
         sprite_sheet = SpriteSheet("Kauzz Cave Tiles/Environment.png")  # load in the sprite sheet
