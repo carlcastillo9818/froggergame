@@ -12,10 +12,9 @@
     For next time, consider adding frog sounds (optional), check the
     collisions between the frog and the goal posts AGAIN (just to be safe), also check the water blocks at the very top
     row because currently the frog can still land on them without drowning.  Adjust the size of the lives and score
-    counters at the top left if you think they are too small.  The last thing to add would be a start menu
+    counters at the top left if you think they are too small.  Move all tilesets and spritesheets into the new
+    folder I created just for those files.  The last thing to add would be a start menu
     or title screen before the game starts, check google for that.
-
-
 
     7-8-21 Focus on fine tuning the collision between the frog, the dragonfly, and each goal post.  Make sure high scores
     get updated and lives get updated correctly.  After all that is finished then you can focus on implementing sound
