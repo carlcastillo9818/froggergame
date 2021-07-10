@@ -1,9 +1,21 @@
 """
-     Pygame frogger game (1.5 build)
+     Pygame frogger game (1.9 build)
 
     TODO LIST:
     1. ADD A START MENU/PLAY MENU SCREEN BEFORE THE GAME STARTS RUNNING.
-    2. FIND A WAY TO ADD SOUNDS (CAR SOUNDS, FROG SOUNDS, OR JUST BACKGROUND MUSIC WOULD BE FINE).
+
+    7-10-21 Tuned the collision between the frog, the dragonfly, and each goal post. Added tilesets for water blocks,
+    grass blocks, and road blocks. Placed the new blocks into the game and they look good.
+     Credits to StremArt for the grass tileset, credits to TearofTheStar for the water
+    tileset.  I added background music to the game (credits to Kevin MacLeod). I also added
+     text files to give credits to all those artists I mentioned, it is located in the game folder.
+    For next time, consider adding frog sounds (optional), check the
+    collisions between the frog and the goal posts AGAIN (just to be safe), also check the water blocks at the very top
+    row because currently the frog can still land on them without drowning.  Adjust the size of the lives and score
+    counters at the top left if you think they are too small.  The last thing to add would be a start menu
+    or title screen before the game starts, check google for that.
+
+
 
     7-8-21 Focus on fine tuning the collision between the frog, the dragonfly, and each goal post.  Make sure high scores
     get updated and lives get updated correctly.  After all that is finished then you can focus on implementing sound
@@ -107,6 +119,7 @@ TO THE OBJECTIVES BELOW.
 
      ALSO RUN THE GAME NEXT TIME TO SEE YOUR PROGRESS BEFORE MAKING ANY CHANGES
 """
+import os
 import pygame, sys
 from Frog import *
 from Automobile import *
@@ -178,23 +191,22 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
     they can still earn points by reaching one of the goalposts (frog home) and be reset to the starting position
     , and if they are out of lives then its GAME OVER!'''
 
+    # check for collision between frog and dragonfly
     insectToEat.teleportAround() # call the method to make the insect move to each goal post
     if playableCharacter.getYPos() == insectToEat.getYPos():  # check if the frogs y position is equal to the dragonfly y position (at the same y coordinate level)
         pixels = 20  # number of pixels to add to the players x position or the logs x position
-        print("frog and dragonfly have same Y POSITION!!!")  # test message for debugging and testing purposes
         if (insectToEat.getXPos() < playableCharacter.getXPos() < (
                 insectToEat.getXPos() + pixels)) or (
                 insectToEat.getXPos() < (playableCharacter.getXPos() + pixels) < (
                 insectToEat.getXPos() + pixels)):
-
-            print("Frog and dragonfly have same x position (collision occurring!)")
             playableCharacter.bonusHighScore() # give a bonus high score to the frog (in addition to their regular high score)
             playableCharacter.setXPos(300)  # move the frog back to its default position
             playableCharacter.setYPos(840)
 
+
+    # check for collision between frog and each goal post
     for index,goal in enumerate(goalPosts):
-        pixels = 60  # number of pixels to add to the players x position or the goals x position
-        # collision using x and y coordinates
+        pixels = 10  # number of pixels to add to the players x position or the goals x position
         if playableCharacter.getYPos() == goal.getYPos():  # check if the frogs y position is equal to the caves y position (at the same y coordinate level)
             if (goal.getXPos() < playableCharacter.getXPos() < (goal.getXPos() + pixels)) or (
                     goal.getXPos() < (playableCharacter.getXPos() + pixels) < (goal.getXPos() + pixels)):
@@ -202,10 +214,9 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
                 playableCharacter.setXPos(300)  # move the frog back to its default position
                 playableCharacter.setYPos(840)
 
-
+    # check for collision between frog and moving river logs
     for index,log in enumerate(riverLogSpritesList):
         pixels = 100 # number of pixels to add to the players x position or the logs x position
-        # collision using x and y coordinates
         if playableCharacter.getYPos() == log.getYPos():  # check if the frogs y position is equal to the logs y position (at the same y coordinate level)
             if (playableCharacter.getXPos() > log.getXPos() and playableCharacter.getXPos() < (log.getXPos() + pixels)) or ((playableCharacter.getXPos() + pixels) > log.getXPos() and (playableCharacter.getXPos() + pixels) < (log.getXPos() + pixels)):
                 playableCharacter.setXPos(log.getXPos()) # set frogs x pos to the logs x pos
@@ -321,23 +332,29 @@ def draw_game_objects(screen, movableSpritesList, backgroundObjectsList):  # ren
 
 
 '''
-This function runs a for loop that creates background road objects (black roads and yellow road marks for example),
-stores them in a list, and depending on the color argument, it changes x and y positions accordingly
+This function creates road blocks using a tileset and all the road blocks are placed
+in several rows and columns which are determined by the x coordinates and y coordinates of the blocks.
 '''
-def makeRoads(screen, x_pos, y_pos, color, width, height, bg_list,num_of_objs):  # creates each background object FOR THIS SPECIFIC GAME (frogger)
-    for x in range(num_of_objs):
-        background_obj = RectBackground(screen, color, width, height, x_pos,y_pos)  # set surface, color, width, height, x pos, y pos
-        bg_list.add(background_obj)
-        if (color == BLACK):  # black will always be associated with background object that is a ROAD
-            y_pos -= 60  # adjust black rectangles as necessary
-        elif (color == YELLOW):  # yellow will always be associated with background object that is a ROAD MARK
-            x_pos += 100  # adjust yellow rectangles as necessary
+def makeRoads(screen, x_pos, y_pos, color, width, height, road_list,num_of_objs):  # creates each background object FOR THIS SPECIFIC GAME (frogger)
+    original_y_coord = y_pos # holds original y coordinate for the respective road block
+
+    for i in range(11): # the total number of iterations in which pairs of road blocks will be created (1 = 2 road blocks, 2 = 4 road blocks, etc)
+        for x in range(num_of_objs): # create two road blocks every iteration of this loop
+            road_list.append(RectBackground(screen, color, width, height, x_pos,y_pos, "road"))  # add each road block to the road list
+            y_pos -= 60  # get ready to place the next block above the previous block (the result will be a pair of blocks)
+        y_pos = original_y_coord # reset the y coordinate to what it was when the function was first called (different for each set of road blocks!)
+        x_pos += 65 # update the x coordinate to the right
+
+#makeRoads(screen, 0, 600, BLACK, SCREEN_WIDTH, 60, all_background_locations, 3)
 
 '''
 This function has a new game loop. This game loop checks if the user hits a certain button,
 if so, then it will bring them to a new game. If they hit another certain button, 
 it will end the game and close the game window.'''
 def endScreen(screen):
+
+    pygame.mixer.music.stop() # stop the music
+
     # new game loop
     run = True # Used in the secondary game Loop, true until the user clicks the close button or escape key.
 
@@ -377,12 +394,52 @@ def displayEndScreenText(screen):
     screen.blit(continueMessage, (150, 400))  # draw the game over msg to the screen
     screen.blit(frogimage, (310,200)) # draw the frog image to the screen above the game over message
 
+'''
+This function creates grass blocks using tileset and it places them on several
+rows and columns which are determined by the x and y coordinates.
+'''
+def createGrassBlocks(screen, screenWidth, grassList, grass_x_coord, grass_y_coord):
+    for x in range(11):
+        grassList.append(RectBackground(screen, GREEN, screenWidth, 60, grass_x_coord, grass_y_coord,"grass"))  # add each block to this list
+        grass_x_coord += 65  # update the x coordinate for next block
+
+'''
+This function creates water blocks using tileset and it places them on several
+rows and columns which are determined by the x and y coordinates.
+'''
+def createWaterBlocks(screen, screenWidth, waterList, water_x_coord, water_y_coord):
+    # run nested loops to build the water blocks (remember there are several rows and columns!)
+    for x in range(7):
+        for x in range(11):
+            waterList.append(RectBackground(screen, BLUE, screenWidth, 420, water_x_coord,water_y_coord, "water")) # add each block to the list
+            water_x_coord += 65 # update x coordinate for next block
+        water_x_coord = 0 # reset the x coordinate when moving to the next row of blocks
+        water_y_coord += 60 # update the y coordinate when starting the next row of blocks
+
+
+'''
+This function allows for background music to be loaded in and played during the main game
+infinitely.
+'''
+def playFroggerMusic():
+    '''
+    If you have music or atmospheric sound effects you want to play in your game's background,
+    you can use the music function of Pygame's mixer module. In your setup section, load the music file:
+    The -1 value tells Pygame to loop the music file infinitely. You can set it to
+    anything from 0 and beyond to define how many times the music should loop before stopping.'''
+    pygame.mixer.music.load("sounds/pixelland.mp3")
+    pygame.mixer.music.play(-1)
+
+
 def main():
     SCREEN_HEIGHT = 900  # Set the width and height of the screen [width, height]
     SCREEN_WIDTH = 700
 
+
     # setup pygame and screen size and caption below
     pygame.init()
+    pygame.mixer.init()
+
     size = (SCREEN_WIDTH, SCREEN_HEIGHT)  # create a size var holding screen width and height
     screen = pygame.display.set_mode(size)  # intialize the screen
     pygame.display.set_caption("My Frogger Game")  # set a title for the game window
@@ -392,6 +449,9 @@ def main():
     # EXCLUDE THIS, I DECIDED TO MAKE MY OWN BACKGROUND 3/1/21 create custom background object (the background of the game)
     # gameBackground = Background('backgroundForGame(MadebyMe)V1.png', [0,0])
 
+    # call the play music function
+    playFroggerMusic()
+
     all_sprites_list = pygame.sprite.Group()  # This will be a list that will contain all the character sprites for the game.
     all_background_locations = pygame.sprite.Group()  # This will be a list that will contain all the roads, grass fields, and rivers for the game
     all_enemy_automobiles = pygame.sprite.Group()  # This will be a list that will contain all the ENEMY automobile sprites for the game.
@@ -399,7 +459,7 @@ def main():
     all_goalPosts = pygame.sprite.Group()   # A list that contains all the goal related objects (caves/rocks) for the game
 
     # create your main character object (a frog in this case!)
-    playerFrog = Frog(DARK_GREEN, 30,0, 60,60)  # set frogs color,x,y positions, width,height, (in that order). Y pos has to be 840 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
+    playerFrog = Frog(DARK_GREEN, 300,850, 60,60)  # set frogs color,x,y positions, width,height, (in that order). Y pos has to be 840 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
 
     # create dragonfly object (this will be the object that gets eaten by the frog to build their high score!!!)
     dragonFly = DragonFly(50,50,150,0)
@@ -419,24 +479,20 @@ def main():
     log5 = RiverLog(80,80,randint(3,4), 700, 120, "Right")
     log6 = RiverLog(80, 80, randint(3, 4), 700, 60, "Left")
 
-    # make multiple road objects (surface, xpos, ypos, color, width, height, background list, number of objects)
-    makeRoads(screen, 0, 780, BLACK, SCREEN_WIDTH, 60, all_background_locations, 2)
-    makeRoads(screen, 30, 805, YELLOW, 30, 10, all_background_locations, 7)
-    makeRoads(screen, 30, 750, YELLOW, 30, 10, all_background_locations, 7)
-    makeRoads(screen, 0, 600, BLACK, SCREEN_WIDTH, 60, all_background_locations, 2)
-    makeRoads(screen, 30, 625, YELLOW, 30, 10, all_background_locations, 7)
-    makeRoads(screen, 30, 565, YELLOW, 30, 10, all_background_locations, 7)
-    makeRoads(screen, 0, 480, BLACK, SCREEN_WIDTH, 60, all_background_locations, 1)
-    makeRoads(screen, 30, 505, YELLOW, 30, 10, all_background_locations, 7)
+    #make multiple road objects (surface, xpos, ypos, color, width, height, background list, number of objects)
+    roadList = []
+    makeRoads(screen, 0, 780, BLACK, SCREEN_WIDTH, 60, roadList, 2)
+    makeRoads(screen, 0, 600, BLACK, SCREEN_WIDTH, 60, roadList, 3)
 
+    grass1 = [] # list of grass blocks in the first row (the one on the bottom)
+    grass2 = [] # second row grass blocks
+    grass3 = [] # third row  grass blocks
+    createGrassBlocks(screen, SCREEN_WIDTH, grass1, 0, 840) # call function to make each tileset grass block
+    createGrassBlocks(screen, SCREEN_WIDTH, grass2, 0, 660) # args -> screen, screenWidth, grassList,x_coord, y_coord
+    createGrassBlocks(screen, SCREEN_WIDTH, grass3, 0, 420)
 
-    # grass rectangles -> pass args:  surface, color, width, height, x pos, y pos
-    grass1 = RectBackground(screen, GREEN, SCREEN_WIDTH, 60, 0, 840)
-    grass2 = RectBackground(screen, GREEN, SCREEN_WIDTH, 60, 0, 660)
-    grass3 = RectBackground(screen, GREEN, SCREEN_WIDTH, 60, 0, 420)
-
-    # water rectangle -> pass args:  surface, color, width, height, x pos, y pos
-    water1 = RectBackground(screen, BLUE, SCREEN_WIDTH, 420, 0, 0)
+    water1 = [] # list of water blocks
+    createWaterBlocks(screen, SCREEN_WIDTH, water1, 0, 0) # call func to make waterblock, args -> screen, screenWidth, waterList, water_x_coord, water_y_coord
 
     # goal platforms (cave-like objects where the frog needs to go to collect flies to build a high score)
     goalspot1 = FrogHome(screen, 400,400,150,0) # pass args : surface, width, height, x , y
@@ -452,7 +508,7 @@ def main():
     # add all objects to the correct lists here
     all_sprites_list.add(car1, car2, car3, car4, car5,log1,log2, log3, log4,log5,log6,playerFrog,dragonFly)  # add all moving game objects to the list of game sprites
     all_enemy_automobiles.add(car1, car2, car3, car4,car5)  # add the cars to the list of automobiles
-    all_background_locations.add(grass1, grass2, grass3, water1,goalspot1, goalspot2,goalspot3, goalspot4,rock1,rock2, rock3)  # add grass and water objects to background locations list '''
+    all_background_locations.add(grass1, grass2, grass3, water1,roadList, goalspot1, goalspot2,goalspot3, goalspot4,rock1,rock2, rock3)  # add grass and water objects to background locations list '''
     all_riverLogs.add(log1, log2,log3,log4,log5,log6) # add log objects to the list of river logs
     all_goalPosts.add(goalspot1,goalspot2, goalspot3,goalspot4) # add all the goal objects to the goal list
 

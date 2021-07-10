@@ -17,24 +17,23 @@ class DragonFly(pygame.sprite.Sprite):
         #self.image.set_colorkey(WHITE)
         self.width = width
         self.height = height
-        # set speed vector of dragonfly
-        self.change_x = 0
+        self.change_x = 0 # set x&y speed vector of dragonfly
         self.change_y = 0
-        # this list holds all the images for animated move left of the dragonfly
-        self.dragonfly_flying_left = []
+        self.dragonfly_flying_left = [] # this list holds all the images for animated move left of the dragonfly
+
         #pygame.draw.rect(self.image, GREEN, [0, 0, self.width, self.height]) # use this line of code to see a generic green block in place of the sprite!
         self.loadSprites() # create the list of sprites with this method call
 
         # Fetch the rectangle object that has the dimensions of the image.
-        self.rect = self.image.get_rect()
         self.image = self.dragonfly_flying_left[0] # set the dragonfly sprite image that the dragonfly starts with
+        self.rect = self.image.get_rect()
 
         # set x and y positions initially
         self.rect.x = x
         self.rect.y = y
 
         self.last = pygame.time.get_ticks()  # store number of milliseconds in last
-        self.cooldown = 900  # cooldown time (the higher the cooldown, the slower the sprite frame transition will be from one img to the next! test it to see for yourself!)
+        self.cooldown = 400  # cooldown time (the higher the cooldown, the slower the sprite frame transition will be from one img to the next! test it to see for yourself!)
 
     def loadSprites(self): # creates the dragonfly sprites
         sprite_sheet = SpriteSheet("Dragonfly Sprite Sheet.png") # load in the sprite sheet
@@ -65,7 +64,7 @@ class DragonFly(pygame.sprite.Sprite):
             self.rect.x += self.change_x  # move the character to the left
 
         # adjust the divisor (the operand on the right side of the // sign), the higher the number, the slower the dragonfly will be to update to its next sprite image! (this goes with the cooldown data member above!)
-        frame = (self.rect.x // 100) % len(self.dragonfly_flying_left)  # calculate frame for the current image
+        frame = (self.rect.x // 60) % len(self.dragonfly_flying_left)  # calculate frame for the current image
         self.image = self.dragonfly_flying_left[frame]  # set the dragonfly image to a new image [position is frames value]
 
     def moveRight(self, changeX): # move dragonfly right a certain amount (using x speed vector value)
@@ -78,15 +77,12 @@ class DragonFly(pygame.sprite.Sprite):
             self.rect.x += self.change_x  # move the character to the left
 
         # adjust the divisor (the operand on the right side of the // sign), the higher the number, the slower the dragonfly will be to update to its next sprite image! (this goes with the cooldown data member above!)
-        frame = (self.rect.x // 100) % len(self.dragonfly_flying_left)  # calculate frame for the current image
+        frame = (self.rect.x // 60) % len(self.dragonfly_flying_left)  # calculate frame for the current image
         self.image = self.dragonfly_flying_left[frame]  # set the dragonfly image to a new image [position is frames value]
 
     def teleportAround(self): # moves dragonfly to each goal post randomly (left to right and vice versa)
         moveLeftChoice = 1 # this var represents the choice for the dragonfly to go left
         moveRightChoice = 2 # this var represents the choice for the dragonfly to go left
-
-        print(randint(moveLeftChoice, moveRightChoice)) # display the random number that was picked (testing purposes)
-
         if(randint(moveLeftChoice,moveRightChoice) == 1): # check if the random number was 1
             if(self.rect.x == 270): # dragonfly position moved to the right previously
                 self.moveLeft(-120) # move the dragonfly to the left(back to its initial position!)
