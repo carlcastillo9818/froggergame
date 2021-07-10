@@ -8,7 +8,7 @@
     7-8-21 Focus on fine tuning the collision between the frog, the dragonfly, and each goal post.  Make sure high scores
     get updated and lives get updated correctly.  After all that is finished then you can focus on implementing sound
     and MAYBE a start menu but its not necessary for this project.
-    
+
     6-??-21 Next time, work on making the dragonfly move from goalpost to goalpost so that the player has to be careful when
     moving their frog to the goals.  If the frog succeeds in getting the dragonfly, the players high score should go up.
     If the frog misses the dragonfly, they will fall into the goalpost (frog home) and be reset to the starting position
@@ -215,7 +215,7 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
                     if playableCharacter.getFrogLivesCount() > 0: # as long as the frog has more than 0 lives
                         playableCharacter.decreaseFrogLives() # Frog loses a life
                     else: # frog has no more lives
-                        endScreen() # call the game over screen function
+                        endScreen(screen) # call the game over screen function
             else:
                 '''Frog isnt on a log which means it must be touching the water blocks near the log, so reset frogs position'''
                 playableCharacter.setXPos(300)  # reset frogs position to the starting position at the beginning of the game
@@ -223,7 +223,7 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
                 if playableCharacter.getFrogLivesCount() > 0:  # as long as the frog has more than 0 lives
                     playableCharacter.decreaseFrogLives()  # Frog loses a life
                 else:  # frog has no more lives
-                    endScreen()  # call the game over screen function
+                    endScreen(screen)  # call the game over screen function
 
         if index % 2 != 0:  # check if the index / 2 remainder is NOT 0, if true then every ODD index or water log should come from the right side of the screen and MOVE LEFT
             log.moveLeft()  # make the log move to the left
