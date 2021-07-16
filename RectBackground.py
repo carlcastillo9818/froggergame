@@ -34,17 +34,17 @@ class RectBackground(pygame.sprite.Sprite):
         else:
             scaletuple = (65, 60)  # set scaling width and height
             if(self.blockType == "grass"):
-                spritesheet = SpriteSheet("LongGrassTiles.png")
+                spritesheet = SpriteSheet("images/LongGrassTiles.png")
                 image = spritesheet.get_image(0, 0, 64, 64,BLACK)  # create the image var for dragonfly (get the x y coordinates,width,height of the image in the SPRITE SHEET picture)
                 image = pygame.transform.smoothscale(image, scaletuple)
                 self.image = image
             elif(self.blockType == "water"):
-                spritesheet = SpriteSheet("WaterTile.png")
+                spritesheet = SpriteSheet("images/WaterTile.png")
                 image = spritesheet.get_image(34,34,32,32,BLACK)
                 image = pygame.transform.scale(image, scaletuple)
                 self.image = image
             elif(self.blockType == "road"):
-                spritesheet = SpriteSheet("RoadTile.png")
+                spritesheet = SpriteSheet("images/RoadTile.png")
                 image = spritesheet.get_image(0,0,31,28,BLACK)
                 image = pygame.transform.scale(image, scaletuple)
                 self.image = image

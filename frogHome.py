@@ -39,7 +39,7 @@ class FrogHome(pygame.sprite.Sprite):
         return self.rect.y
 
     def loadFrogHomeSprite(self):  # load the image of the frogs home (should look like a cave like in the real frogger game)
-        sprite_sheet = SpriteSheet("Kauzz Cave Tiles/Environment.png")  # load in the sprite sheet
+        sprite_sheet = SpriteSheet("images/Kauzz Cave Tiles/Environment.png")  # load in the sprite sheet
         image = sprite_sheet.get_image(31, 15, 56, 51, BLACK) # call method and pass in the args -> x pos , y pos, width, height, and color key for surface
         image = pygame.transform.scale(image,(60, 60))  # scale the image so it fits with other game sprites (frog, background, etc)
         self.image = image

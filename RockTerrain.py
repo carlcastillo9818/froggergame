@@ -38,7 +38,7 @@ class RockTerrain(pygame.sprite.Sprite):
         return self.rect.y
 
     def loadRockSprite(self):  # load the image of the rock
-        sprite_sheet = SpriteSheet("Kauzz Cave Tiles/Environment.png")  # load in the sprite sheet
+        sprite_sheet = SpriteSheet("images/Kauzz Cave Tiles/Environment.png")  # load in the sprite sheet
         image = sprite_sheet.get_image(340, 135, 43, 42, BLACK) # call method and pass in the args -> x pos , y pos, width, height, and color key for surface
         image = pygame.transform.scale(image,(60, 60))  # scale the image so it fits with other game sprites (frog, background, etc)
         self.image = image

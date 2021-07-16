@@ -1,8 +1,17 @@
 """
      Pygame frogger game (1.9 build)
 
-    TODO LIST:
-    1. ADD A START MENU/PLAY MENU SCREEN BEFORE THE GAME STARTS RUNNING.
+    TODO:
+    Finish the start menu screen.
+    Fill text files with credits to all those artists I mentioned.
+    Adding frog sounds (optional)
+    Check collisions between the frog and the goal posts AGAIN (just to be safe).
+    Check the water blocks at the very top row because currently the frog can still land on them without drowning.
+    Adjust the size of the lives and score counters at the top left if you think they are too small.
+    Move all tilesets and spritesheets into the new folder I created just for those files.
+
+    7-15-21 Started working on a start menu or title screen before the game starts.  Still need to do the following tasks
+    listed above in the TODO list.
 
     7-10-21 Tuned the collision between the frog, the dragonfly, and each goal post. Added tilesets for water blocks,
     grass blocks, and road blocks. Placed the new blocks into the game and they look good.
@@ -344,18 +353,60 @@ def makeRoads(screen, x_pos, y_pos, color, width, height, road_list,num_of_objs)
         y_pos = original_y_coord # reset the y coordinate to what it was when the function was first called (different for each set of road blocks!)
         x_pos += 65 # update the x coordinate to the right
 
-#makeRoads(screen, 0, 600, BLACK, SCREEN_WIDTH, 60, all_background_locations, 3)
+'''
+This function features a start screen menu in a loop. This game loop checks if the user hits the start button,
+if so, then it will let them start the game. If they hit the quit button, 
+it will end the game and close the game window. '''
+def startMenu(screen):
+    # new game loop
+    run = True  # Used in the game loop below, true until the user clicks the close button or escape key.
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:  # if user closes the window by pressing RED X button
+                run = False
+                sys.exit()  # stops the program so surface cannot be changed after quitting
+                break
+            if event.type == pygame.KEYDOWN:  # if the user presses down on a key
+                if event.key == pygame.K_n:  # Pressing the n Key will quit the game
+                    run = False
+                    sys.exit()  # stops the program so surface cannot be changed after quitting
+                    break
+                elif event.key == pygame.K_y:  # Pressing the y key will reset the game
+                    main()  # call the main method to run again (acts like the game was reset after a game over!)
+                    break
+        screen.fill(BLACK)  # clears the old screen and allows new things to be drawn
+        displayStartScreenText(screen)  # call the method to display a game over screen
+        pygame.display.update()  # updates the ENTIRE screen (no args were passed)
+
+"""This function provides the text to be displayed in the start menu screen.
+The title of the game, the start text, and quit text will be displayed on the screen!"""
+def displayStartScreenText(screen):
+    backgroundImg = pygame.image.load("images/frogbg.jpg") # background image loaded into the start screen
+    screen.blit(backgroundImg, (0, 0)) # draw background to the screen
+
+    font = pygame.font.Font("fonts/VarelaRound-Regular.ttf", 100)  # set type of font and the font size
+
+    gameTitle = font.render("FROGGER", True, WHITE) # displays game title
+    titleRectangle = pygame.draw.rect(screen, BLACK, pygame.Rect(100, 100, 500, 110), 0) # draw rectangle box behind start text
+
+    startMessage = font.render("Start", True, WHITE)  # displays start text
+    startRectangle = pygame.draw.rect(screen, BLACK, pygame.Rect(200, 300, 250, 110), 0) # draw rectangle box behind start text
+
+    quitMessage = font.render("Quit", True, WHITE)  # displays start text
+    quitRectangle = pygame.draw.rect(screen, BLACK, pygame.Rect(200, 500, 250, 110), 0) # draw rectangle box behind start text
+
+    screen.blit(startMessage, (210, 300))  # draw the start msg to the screen
+    screen.blit(quitMessage, (210, 500)) # draw the quit msg to the screen
+    screen.blit(gameTitle, (100,100)) # draw the game title to the screen
 
 '''
-This function has a new game loop. This game loop checks if the user hits a certain button,
-if so, then it will bring them to a new game. If they hit another certain button, 
+This function features a game over screen in a loop. This game loop checks if the user hits the continue button,
+if so, then it will let them play again. If they hit the quit button, 
 it will end the game and close the game window.'''
 def endScreen(screen):
-
     pygame.mixer.music.stop() # stop the music
-
     # new game loop
-    run = True # Used in the secondary game Loop, true until the user clicks the close button or escape key.
+    run = True # Used in the game loop below, true until the user clicks the close button or escape key.
 
     while run:
         for event in pygame.event.get():
@@ -378,13 +429,13 @@ def endScreen(screen):
 """This function provides the text to be displayed in the game over screen.
 A game over and continue text prompts will be rendered and blitted to the screen!"""
 def displayEndScreenText(screen):
-    font = pygame.font.Font("VarelaRound-Regular.ttf", 100)  # set type of font and the font size
+    font = pygame.font.Font("fonts/VarelaRound-Regular.ttf", 100)  # set type of font and the font size
     gameOverMessage = font.render("Game Over!", True, WHITE)  # display that the game is over
 
-    font2 = pygame.font.Font("VarelaRound-Regular.ttf", 50)  # set type of font and the font size
+    font2 = pygame.font.Font("fonts/VarelaRound-Regular.ttf", 50)  # set type of font and the font size
     continueMessage = font2.render("Continue? (Y/N)", True, WHITE)  # display continue msg
 
-    sprite_sheet = SpriteSheet("GreenFrog.png") # sprite sheet to retrieve the frog image from
+    sprite_sheet = SpriteSheet("images/GreenFrog.png") # sprite sheet to retrieve the frog image from
     scaletuple = (80, 80)  # set scaling width and height for the frog img
     frogimage = sprite_sheet.get_image(0, 0, 24, 15, WHITE)  # create starting image the frog starts with
     frogimage = pygame.transform.scale(frogimage, scaletuple)  # scale the image to be bigger in game over screen
@@ -434,7 +485,6 @@ def main():
     SCREEN_HEIGHT = 900  # Set the width and height of the screen [width, height]
     SCREEN_WIDTH = 700
 
-
     # setup pygame and screen size and caption below
     pygame.init()
     pygame.mixer.init()
@@ -442,6 +492,8 @@ def main():
     size = (SCREEN_WIDTH, SCREEN_HEIGHT)  # create a size var holding screen width and height
     screen = pygame.display.set_mode(size)  # intialize the screen
     pygame.display.set_caption("My Frogger Game")  # set a title for the game window
+
+    startMenu(screen) # call the start menu screen function
 
     # background = pygame.image.load("backgroundForGame(V2).png") # my custom background for my game
 
@@ -518,7 +570,7 @@ def main():
     clock = pygame.time.Clock()
 
     # a font for the on screen text (two parameters -> filename (a .ttf font file), font size)
-    font = pygame.font.Font("VarelaRound-Regular.ttf", 15)
+    font = pygame.font.Font("fonts/VarelaRound-Regular.ttf", 15)
 
     # -------- Main Program Loop -----------
     while not done:

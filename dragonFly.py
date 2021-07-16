@@ -35,8 +35,8 @@ class DragonFly(pygame.sprite.Sprite):
         self.last = pygame.time.get_ticks()  # store number of milliseconds in last
         self.cooldown = 400  # cooldown time (the higher the cooldown, the slower the sprite frame transition will be from one img to the next! test it to see for yourself!)
 
-    def loadSprites(self): # creates the dragonfly sprites
-        sprite_sheet = SpriteSheet("Dragonfly Sprite Sheet.png") # load in the sprite sheet
+    def loadSprites(self): # loads the dragonfly sprites
+        sprite_sheet = SpriteSheet("images/Dragonfly Sprite Sheet.png") # load in the sprite sheet
         scaletuple = (50,50) # set scaling width and height
 
         image = sprite_sheet.get_image(6, 8, 20,15, BLACK) # create the image var for dragonfly (get the x y coordinates,width,height of the image in the SPRITE SHEET picture)
@@ -101,16 +101,6 @@ class DragonFly(pygame.sprite.Sprite):
                 self.moveRight(115)
             else:
                 self.moveRight(0) # dont let dragonfly move to the right so just pass 0 and only its sprite will update
-
-
-    def loadDragonFlySprite(self): # load the image of the dragonfly sprite
-        sprite_sheet = SpriteSheet("Dragonfly Sprite Sheet.png") # load in the sprite sheet
-        scaletuple = (50,50) # set scaling width and height
-
-        image = sprite_sheet.get_image(6,8,20,15, BLACK)  # call method and pass in the args -> x pos , y pos, width, height, and color key for surface
-        image = pygame.transform.flip(image, True, False) # FLIP the image (so instead of looking left, now it looks in the right direction)
-        image = pygame.transform.scale(image, scaletuple)  # scale the image so it fits with other game sprites (frog, background, etc)
-        self.image = image # Load a proper picture of the dragonfly...
 
     def setXPos(self,x): # set the x position of the dragonfly
         self.rect.x = x

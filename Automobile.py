@@ -56,7 +56,7 @@ class Automobile(pygame.sprite.Sprite):
         '''
 
         # list of all file locations for each sprite sheet (diff colors)
-        myCarSpriteList = ["Isometric_vehicles2/red.png", "Isometric_vehicles2/light_blue.png", "Isometric_vehicles2/green.png", "Isometric_vehicles2/yellow.png", "Isometric_vehicles2/orange.png", "Isometric_vehicles2/white.png", "Isometric_vehicles2/mid_blue.png"]
+        myCarSpriteList = ["images/Isometric_vehicles2/red.png", "images/Isometric_vehicles2/light_blue.png", "images/Isometric_vehicles2/green.png", "images/Isometric_vehicles2/yellow.png", "images/Isometric_vehicles2/orange.png", "images/Isometric_vehicles2/white.png", "images/Isometric_vehicles2/mid_blue.png"]
         sprite_sheet = SpriteSheet(choice(myCarSpriteList)) # randomly select a sprite sheet
 
         self.direction_image(sprite_sheet) # call method with the sprite sheet that was randomly picked

@@ -56,7 +56,7 @@ class RiverLog(pygame.sprite.Sprite):
         self.image = image
 
     def loadRiverLogSprite(self): # load the image of the river wood log sprite
-        sprite_sheet = SpriteSheet("RPG Nature Tileset.png") # load in the sprite sheet
+        sprite_sheet = SpriteSheet("images/RPG Nature Tileset.png") # load in the sprite sheet
         self.direction_image(sprite_sheet) # call the function to decide which direction sprite img will be facing
 
     def setXPos(self,x): # set the x position of the automobile

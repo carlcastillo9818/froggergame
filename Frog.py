@@ -32,7 +32,7 @@ class Frog(pygame.sprite.Sprite):
         self.frog_walking_down = []
 
         # create sprite sheet object holding the frog sprite sheet images in it
-        sprite_sheet = SpriteSheet("GreenFrog.png")
+        sprite_sheet = SpriteSheet("images/GreenFrog.png")
         scaletuple = (60,60) # set scaling width and height
 
         #get the LEFT direction images
