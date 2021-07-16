@@ -128,36 +128,25 @@ class Frog(pygame.sprite.Sprite):
 
         # move left, only if cooldown has been ((self.cooldown) / 1000) seconds since last
         current_time = pygame.time.get_ticks()  # store number of milliseconds in current time
-        print("Current time " + str(current_time) + " - last recorded time " + str(self.last))
-        print("Condition is : " + str(current_time - self.last >= self.cooldown))
-
         if current_time - self.last >= self.cooldown:  # compare the current number of ms minus the last number of ms if its greater than or equal to the cooldown time
             self.last = current_time  # change the last number of ms to the current number
             self.rect.x += self.change_x  # move character to the right
 
         frame = (self.rect.x // 40) % len(self.frog_walking_right)  # calculate frame for the current image
-        print("Current frame : " + str(frame))
         self.image = self.frog_walking_right[frame]  # set the frogs image to a new image [position is frames value]
-        print(self.rect.x) # check current x position after moving (change_x) speed
 
     def moveLeft(self): # move frog left (using the x speed vector value)
         self.change_x = -60 # set the x speed vector
 
         # move left, only if cooldown has been ((self.cooldown) / 1000) seconds since last
         current_time = pygame.time.get_ticks() # store number of milliseconds in current time
-        print("Current time " + str(current_time) + " - last recorded time " + str(self.last))
-        print("Condition is : " + str(current_time - self.last >= self.cooldown))
         if current_time - self.last >= self.cooldown: # compare the current number of ms minus the last number of ms if its greater than or equal to the cooldown time
             self.last = current_time # change the last number of ms to the current number
             self.rect.x += self.change_x  # move the character to the left
 
         # adjust the divisor (the operand on the right side of the // sign), the higher the number, the slower the frog will be to update to its next sprite image! (this goes with the cooldown data member above!)
         frame = (self.rect.x // 40) % len(self.frog_walking_left)  # calculate frame for the current image
-        print("Current frame : " + str(frame))
         self.image = self.frog_walking_left[frame]  # set the frogs image to a new image [position is frames value]
-        print(self.rect.x) # check current x position after moving (change_x) speed
-
-
         '''To calculate the frame (could be 1,2,or a higher number) use the calculation below:
         The lower the frame number, the quicker you will go through the frog animations.
         The higher the frame number, the slower (but more clearly) you will go through the frog animations. 
@@ -175,8 +164,6 @@ class Frog(pygame.sprite.Sprite):
 
         # move up, only if cooldown has been ((self.cooldown) / 1000) seconds since last
         current_time = pygame.time.get_ticks() # store number of milliseconds in current time
-        print("Current time " + str(current_time) + " - last recorded time " + str(self.last))
-        print("Condition is : " + str(current_time - self.last >= self.cooldown))
         if current_time - self.last >= self.cooldown: # compare the current number of ms minus the last number of ms if its greater than or equal to the cooldown time
             self.last = current_time # change the last number of ms to the current number
             self.rect.y += self.change_y # move the character up
@@ -184,24 +171,17 @@ class Frog(pygame.sprite.Sprite):
         frame = (self.rect.y // 40) % len(self.frog_walking_up)  # calculate frame for the current image
         self.image = self.frog_walking_up[frame]  # set the frogs image to a new image [position is frames value]
 
-        print("Current Y Pos for Frog is " + str(self.rect.y))  # check current y position after moving (change_y) speed
-        print("Current X Pos for Frog is " + str(self.rect.x))  # check current x position after moving (change_x) speed
-
     def moveDown(self):# move frog down (using the y speed vector value)
         self.change_y = 60
 
         # move down, only if cooldown has been ((self.cooldown) / 1000) seconds since last
         current_time = pygame.time.get_ticks() # store number of milliseconds in current time
-        print("Current time " + str(current_time) + " - last recorded time " + str(self.last))
-        print("Condition is : " + str(current_time - self.last >= self.cooldown))
         if current_time - self.last >= self.cooldown: # compare the current number of ms minus the last number of ms if its greater than or equal to the cooldown time
             self.last = current_time # change the last number of ms to the current number
             self.rect.y += self.change_y # move the character down
 
         frame = (self.rect.y // 40) % len(self.frog_walking_down)  # calculate frame for the current image
         self.image = self.frog_walking_down[frame]  # set the frogs image to a new image [position is frames value]
-
-        print(self.rect.y)  # check current y position after moving (change_y) speed
 
     def setXPos(self,x): # set the x position of frog
         self.rect.x = x

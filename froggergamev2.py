@@ -1,14 +1,15 @@
 """
-     Pygame frogger game (1.9 build)
+     Pygame frogger game (1.91 build)
 
     TODO:
     Finish the start menu screen.
-    Fill text files with credits to all those artists I mentioned.
-    Adding frog sounds (optional)
     Check collisions between the frog and the goal posts AGAIN (just to be safe).
-    Check the water blocks at the very top row because currently the frog can still land on them without drowning.
-    Adjust the size of the lives and score counters at the top left if you think they are too small.
-    Move all tilesets and spritesheets into the new folder I created just for those files.
+
+    7-16-21 Filled text files with credits to all those artists I mentioned. I moved all tilesets and spritesheets into the
+    new folder I created just for those files, as well as moved all audio and fonts into their own folders.
+    Fixed the issue with the water blocks at the very top row because before the frog could still land on them without drowning.
+    I also adjusted the size of the lives and score counters at the top left because they were too small before.
+
 
     7-15-21 Started working on a start menu or title screen before the game starts.  Still need to do the following tasks
     listed above in the TODO list.
@@ -167,16 +168,12 @@ def process_game_events(playableCharacter, endTheGame):
 
     keys = pygame.key.get_pressed()  # KEEP ALL THESE Key MOVEMENTS INSIDE THE ELIF SO CHARACTER MOVES NON-CONTINOUSLY OTHERWISE IGNORE THIS
     if keys[pygame.K_LEFT]:
-        print("You went left by " + str(playableCharacter.change_x))  # shows how many times you are moving the character to the left (testing)
         playableCharacter.moveLeft()
     elif keys[pygame.K_RIGHT]:  # using elif makes it so if a user presses left and right, game only processes the last direction pressed
-        print("You went right by " + str(playableCharacter.change_x))  # shows how many times you are moving the character to the right (testing)
         playableCharacter.moveRight()
     elif keys[pygame.K_UP]:
-        print("You went up by " + str(playableCharacter.change_y))  # shows how many times you are moving the character to the left (testing)
         playableCharacter.moveUp()
     elif keys[pygame.K_DOWN]:
-        print("You went down by " + str(playableCharacter.change_y))  # shows how many times you are moving the character to the left (testing)
         playableCharacter.moveDown()
     # event handlers for moving frog using arrow keys above ^^^
     # place keys under the for loop instead if you want CONTINUOUS MOVEMENT LIKE ASTEROIDS OR MARIO
@@ -214,13 +211,20 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
 
     # check for collision between frog and each goal post
     for index,goal in enumerate(goalPosts):
-        pixels = 10  # number of pixels to add to the players x position or the goals x position
+        pixels = 15  # number of pixels to add to the players x position or the goals x position
         if playableCharacter.getYPos() == goal.getYPos():  # check if the frogs y position is equal to the caves y position (at the same y coordinate level)
             if (goal.getXPos() < playableCharacter.getXPos() < (goal.getXPos() + pixels)) or (
                     goal.getXPos() < (playableCharacter.getXPos() + pixels) < (goal.getXPos() + pixels)):
                 playableCharacter.increaseHighScore() # increase the frogs high score
                 playableCharacter.setXPos(300)  # move the frog back to its default position
                 playableCharacter.setYPos(840)
+            else: #prevent player frog from touching the blue water on the left side or right side of the goal posts or rocks
+                print("hey you cant be here!!!!!!!!!! OUT OF BOUNDS!!!!!!!!!!!!!")
+                print("sending you back to the start")
+                playableCharacter.decreaseFrogLives()
+                playableCharacter.setXPos(300)  # move the frog back to its default position
+                playableCharacter.setYPos(840)
+
 
     # check for collision between frog and moving river logs
     for index,log in enumerate(riverLogSpritesList):
@@ -296,6 +300,7 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
     if playableCharacter.getYPos() < 0:  # top boundary
         playableCharacter.setYPos(0)
 
+
     movableSpritesList.update()  # update the sprites in the list (this list gets updated because the sprites in here all move around)
     # because all the enemy cars are in this list, you dont need to update the other list (which has the same cars)
 
@@ -358,22 +363,29 @@ This function features a start screen menu in a loop. This game loop checks if t
 if so, then it will let them start the game. If they hit the quit button, 
 it will end the game and close the game window. '''
 def startMenu(screen):
-    # new game loop
+    LEFT = 1 # This var represents left mouse button as a num value
+
+    # start menu game loop
     run = True  # Used in the game loop below, true until the user clicks the close button or escape key.
     while run:
+        mouseXPosition, mouseYPosition = pygame.mouse.get_pos() # retrieve x and y position of the mouse!!!
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # if user closes the window by pressing RED X button
                 run = False
                 sys.exit()  # stops the program so surface cannot be changed after quitting
-                break
-            if event.type == pygame.KEYDOWN:  # if the user presses down on a key
-                if event.key == pygame.K_n:  # Pressing the n Key will quit the game
-                    run = False
-                    sys.exit()  # stops the program so surface cannot be changed after quitting
-                    break
-                elif event.key == pygame.K_y:  # Pressing the y key will reset the game
-                    main()  # call the main method to run again (acts like the game was reset after a game over!)
-                    break
+            ''' work on implementing functionality so that when user LEFT mouse clicks on start button, game will start and
+            when user left mouse clicks on quit button, the game will end!'''
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == LEFT:
+                    print("left mouse click")
+                    if 200 <= mouseXPosition <= 450 and 300 <= mouseYPosition <= 405: # user is clicking within the START block
+                        print("clicking on start message rectangle!")
+                        # start the main game loop (ends this loop and proceeds to the game)
+                        run = False
+                    elif 200 <= mouseXPosition <= 450 and 500 <= mouseYPosition <= 606:# user is clicking within the QUIT block
+                        print("clicking on quit message rectangle!")
+                        # close the game
+                        sys.exit()
         screen.fill(BLACK)  # clears the old screen and allows new things to be drawn
         displayStartScreenText(screen)  # call the method to display a game over screen
         pygame.display.update()  # updates the ENTIRE screen (no args were passed)
@@ -384,10 +396,11 @@ def displayStartScreenText(screen):
     backgroundImg = pygame.image.load("images/frogbg.jpg") # background image loaded into the start screen
     screen.blit(backgroundImg, (0, 0)) # draw background to the screen
 
-    font = pygame.font.Font("fonts/VarelaRound-Regular.ttf", 100)  # set type of font and the font size
+    font = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 70)  # set type of font and the font size
 
     gameTitle = font.render("FROGGER", True, WHITE) # displays game title
-    titleRectangle = pygame.draw.rect(screen, BLACK, pygame.Rect(100, 100, 500, 110), 0) # draw rectangle box behind start text
+    titleRectangle = pygame.draw.rect(screen, DARK_GREEN, pygame.Rect(100, 100, 500, 150), 0) # draw rectangle box behind start text
+
 
     startMessage = font.render("Start", True, WHITE)  # displays start text
     startRectangle = pygame.draw.rect(screen, BLACK, pygame.Rect(200, 300, 250, 110), 0) # draw rectangle box behind start text
@@ -397,7 +410,7 @@ def displayStartScreenText(screen):
 
     screen.blit(startMessage, (210, 300))  # draw the start msg to the screen
     screen.blit(quitMessage, (210, 500)) # draw the quit msg to the screen
-    screen.blit(gameTitle, (100,100)) # draw the game title to the screen
+    screen.blit(gameTitle, (110,140)) # draw the game title to the screen
 
 '''
 This function features a game over screen in a loop. This game loop checks if the user hits the continue button,
@@ -495,11 +508,6 @@ def main():
 
     startMenu(screen) # call the start menu screen function
 
-    # background = pygame.image.load("backgroundForGame(V2).png") # my custom background for my game
-
-    # EXCLUDE THIS, I DECIDED TO MAKE MY OWN BACKGROUND 3/1/21 create custom background object (the background of the game)
-    # gameBackground = Background('backgroundForGame(MadebyMe)V1.png', [0,0])
-
     # call the play music function
     playFroggerMusic()
 
@@ -510,7 +518,7 @@ def main():
     all_goalPosts = pygame.sprite.Group()   # A list that contains all the goal related objects (caves/rocks) for the game
 
     # create your main character object (a frog in this case!)
-    playerFrog = Frog(DARK_GREEN, 300,850, 60,60)  # set frogs color,x,y positions, width,height, (in that order). Y pos has to be 840 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
+    playerFrog = Frog(DARK_GREEN,300,840, 60,60)  # set frogs color,x,y positions, width,height, (in that order). Y pos has to be 840 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
 
     # create dragonfly object (this will be the object that gets eaten by the frog to build their high score!!!)
     dragonFly = DragonFly(50,50,150,0)
@@ -570,7 +578,7 @@ def main():
     clock = pygame.time.Clock()
 
     # a font for the on screen text (two parameters -> filename (a .ttf font file), font size)
-    font = pygame.font.Font("fonts/VarelaRound-Regular.ttf", 15)
+    font = pygame.font.Font("fonts/VarelaRound-Regular.ttf", 22)
 
     # -------- Main Program Loop -----------
     while not done:
