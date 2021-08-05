@@ -5,6 +5,8 @@
     Finish the start menu screen.
     Check collisions between the frog and the goal posts AGAIN (just to be safe).
 
+    8-5-21 Finished start menu screen.  Working on collision testing between frog and goal posts (not done yet!)
+
     7-16-21 Filled text files with credits to all those artists I mentioned. I moved all tilesets and spritesheets into the
     new folder I created just for those files, as well as moved all audio and fonts into their own folders.
     Fixed the issue with the water blocks at the very top row because before the frog could still land on them without drowning.
@@ -208,22 +210,19 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
             playableCharacter.setXPos(300)  # move the frog back to its default position
             playableCharacter.setYPos(840)
 
-
     # check for collision between frog and each goal post
     for index,goal in enumerate(goalPosts):
-        pixels = 15  # number of pixels to add to the players x position or the goals x position
+        pixels = 100  # number of pixels to add to the players x position or the goals x position
         if playableCharacter.getYPos() == goal.getYPos():  # check if the frogs y position is equal to the caves y position (at the same y coordinate level)
-            if (goal.getXPos() < playableCharacter.getXPos() < (goal.getXPos() + pixels)) or (
-                    goal.getXPos() < (playableCharacter.getXPos() + pixels) < (goal.getXPos() + pixels)):
+            if (goal.getXPos() < playableCharacter.getXPos() < (goal.getXPos() + pixels)):
+                print("victory!")
                 playableCharacter.increaseHighScore() # increase the frogs high score
                 playableCharacter.setXPos(300)  # move the frog back to its default position
                 playableCharacter.setYPos(840)
             else: #prevent player frog from touching the blue water on the left side or right side of the goal posts or rocks
                 print("hey you cant be here!!!!!!!!!! OUT OF BOUNDS!!!!!!!!!!!!!")
                 print("sending you back to the start")
-                playableCharacter.decreaseFrogLives()
-                playableCharacter.setXPos(300)  # move the frog back to its default position
-                playableCharacter.setYPos(840)
+
 
 
     # check for collision between frog and moving river logs
@@ -377,12 +376,12 @@ def startMenu(screen):
             when user left mouse clicks on quit button, the game will end!'''
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == LEFT:
-                    print("left mouse click")
-                    if 200 <= mouseXPosition <= 450 and 300 <= mouseYPosition <= 405: # user is clicking within the START block
+                    print("left mouse click at x pos : " + str(mouseXPosition) + " and y pos : " + str(mouseYPosition))
+                    if 170 <= mouseXPosition <= 541 and 280 <= mouseYPosition <= 385: # user is clicking within the START block
                         print("clicking on start message rectangle!")
                         # start the main game loop (ends this loop and proceeds to the game)
                         run = False
-                    elif 200 <= mouseXPosition <= 450 and 500 <= mouseYPosition <= 606:# user is clicking within the QUIT block
+                    elif 170 <= mouseXPosition <= 542 and 480 <= mouseYPosition <= 586:# user is clicking within the QUIT block
                         print("clicking on quit message rectangle!")
                         # close the game
                         sys.exit()
@@ -399,17 +398,17 @@ def displayStartScreenText(screen):
     font = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 70)  # set type of font and the font size
 
     gameTitle = font.render("FROGGER", True, WHITE) # displays game title
-    titleRectangle = pygame.draw.rect(screen, DARK_GREEN, pygame.Rect(100, 100, 500, 150), 0) # draw rectangle box behind start text
+    titleRectangle = pygame.draw.rect(screen, DARK_GREEN, pygame.Rect(100, 100, 500, 150), 0) # draw rectangle box behind title text
 
 
     startMessage = font.render("Start", True, WHITE)  # displays start text
-    startRectangle = pygame.draw.rect(screen, BLACK, pygame.Rect(200, 300, 250, 110), 0) # draw rectangle box behind start text
+    startRectangle = pygame.draw.rect(screen, BLACK, pygame.Rect(170, 280, 375, 110), 0) # draw rectangle box behind start text
 
     quitMessage = font.render("Quit", True, WHITE)  # displays start text
-    quitRectangle = pygame.draw.rect(screen, BLACK, pygame.Rect(200, 500, 250, 110), 0) # draw rectangle box behind start text
+    quitRectangle = pygame.draw.rect(screen, BLACK, pygame.Rect(170, 480, 375, 110), 0) # draw rectangle box behind quit text
 
-    screen.blit(startMessage, (210, 300))  # draw the start msg to the screen
-    screen.blit(quitMessage, (210, 500)) # draw the quit msg to the screen
+    screen.blit(startMessage, (190, 300))  # draw the start msg to the screen
+    screen.blit(quitMessage, (205, 500)) # draw the quit msg to the screen
     screen.blit(gameTitle, (110,140)) # draw the game title to the screen
 
 '''
