@@ -17,7 +17,7 @@ class FrogHome(pygame.sprite.Sprite):
         self.height = height
 
         self.loadFrogHomeSprite() # call this function to set the frog home sprite image
-        #pygame.draw.rect(self.image, GREEN, [0, 0, self.width, self.height]) #creates a green block in place of the sprite for TESTING!
+        #pygame.draw.rect(self.image, GREEN, [0, 0, self.width, self.height]) creates a green block in place of the sprite for TESTING!
 
         # Fetch the rectangle object that has the dimensions of the image.
         self.rect = self.image.get_rect()
