@@ -2,10 +2,17 @@
      Pygame frogger game (1.91 build)
 
     TODO:
-    Finish the start menu screen.
-    Check collisions between the frog and the goal posts AGAIN (just to be safe).
+    Add a high scores screen.
+    Do test runs of the game (let others test it too!)
 
-    8-7-21 Continuing to refine the collision code between the frog, the water, the goal posts, and the rocks all in the top row only! (After this I'm done!)
+    8-8-21 Finished implementing the correct collision code between the frog character and the goal posts (frog will now
+    land on each goal post correctly and gain the correct points and additional points if there is a dragonfly.) If
+    the frog touches the rocks or the waters in the top row then it will lose a life and be sent back to the start!
+    I also started drawing a concept for a high scores screen which I will implement next time (hopefully its not
+    super tricky!) then after that I only need to test the game out and it should be done.
+
+    8-7-21 Continuing to refine the collision code between the frog, the water, the goal posts, and the rocks all in the
+    top row only!
 
     8-5-21 Finished start menu screen.  Working on collision testing between frog and goal posts (not done yet!)
 
@@ -194,7 +201,7 @@ Then it checks wall boundaries and finally it updates the movable sprites list.
 def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesList, enemySpritesList, riverLogSpritesList, insectToEat, goalPosts):
     # --- Game logic should go in this function
     # check for collision between frog and dragonfly
-    '''
+
     insectToEat.teleportAround() # call the method to make the insect move to each goal post
     if playableCharacter.getYPos() == insectToEat.getYPos():  # check if the frogs y position is equal to the dragonfly y position (at the same y coordinate level)
         pixels = 20  # number of pixels to add to the players x position or the logs x position
@@ -205,29 +212,48 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
             playableCharacter.bonusHighScore() # give a bonus high score to the frog (in addition to their regular high score)
             playableCharacter.setXPos(300)  # move the frog back to its default position
             playableCharacter.setYPos(840)
-'''
 
+    print("Current frog x and y coordinates are : " + str(playableCharacter.getXPos()) + " , " + str(playableCharacter.getYPos()))
     # check for collision between frog and each goal post
     for index,goal in enumerate(goalPosts):
-        leftPixels = 15  # number of left pixels (to be added to the x positions)
-        rightPixels = 15 # number of right pixels (to be added to the x positions)
+        leftPixels = 16  # number of left pixels (to be added to the x positions)
+        rightPixels = 35 # number of right pixels (to be added to the x positions)
         print("current index is " + str(index))
         if goal.getXPos() - leftPixels <= playableCharacter.getXPos() <= goal.getXPos() + rightPixels and playableCharacter.getYPos() == goal.getYPos():
             '''check if the frogs x position is in between the current goals x position and the x position + an amount of extra 
             pixels and they have the same y coordinate. Imagine a box within a bigger box so it makes more sense.'''
             print("your frog was closest to goal post " + str(index))
-            # check if frog and any of the goal posts have the same Y coordinate
             print("your frog was locked in to the y coord of goal post " + str(index))
             print("victory! you touched goal post " + str(index) + "!")
             playableCharacter.increaseHighScore()
             playableCharacter.setXPos(300)  # move the frog back to its default position
             playableCharacter.setYPos(840)
 
-    for index,goal in enumerate(goalPosts): # check if the frog lands anywhere besides the goal posts
-        # wait to see if the frog lands in the rock or water spaces besides each goal post
-        if playableCharacter.getYPos() == goal.getYPos():
-            if 0 <= playableCharacter.getXPos() < 150:
-                print("KICKING THE FROG back to the start. They didnt land close enough to goal post " + str(index))
+    for index,goal in enumerate(goalPosts):
+        # check if the frog lands anywhere besides the goal posts (either the rocks or the waters in the first row)
+        if playableCharacter.getYPos() == goal.getYPos(): # frog and goal posts have same Y coordinate
+            if 0 <= playableCharacter.getXPos() < 150: # frog is within the left side of the goal posts (the water)
+                print("KICKING THE FROG back to the start. They hit the water. They didnt land close enough to goal post " + str(index))
+                playableCharacter.decreaseFrogLives()
+                playableCharacter.setXPos(300)  # reset frogs position to its initial position
+                playableCharacter.setYPos(840)
+            elif 190 <= playableCharacter.getXPos() < 248: # frog hit the first rock (Starting from the left)
+                print("KICKING THE FROG back to the start. They hit the rock. They didnt land close enough to goal post " + str(index))
+                playableCharacter.decreaseFrogLives()
+                playableCharacter.setXPos(300)  # reset frogs position to its initial position
+                playableCharacter.setYPos(840)
+            elif 300 <= playableCharacter.getXPos() < 360: # frog hit the second rock
+                print("KICKING THE FROG back to the start. They hit the second rock. They didnt land close enough to goal post " + str(index))
+                playableCharacter.decreaseFrogLives()
+                playableCharacter.setXPos(300)  # reset frogs position to its initial position
+                playableCharacter.setYPos(840)
+            elif 420 <= playableCharacter.getXPos() < 494: # frog hit the third rock
+                print("KICKING THE FROG back to the start. They hit the third rock. They didnt land close enough to goal post " + str(index))
+                playableCharacter.decreaseFrogLives()
+                playableCharacter.setXPos(300)  # reset frogs position to its initial position
+                playableCharacter.setYPos(840)
+            elif 540 <= playableCharacter.getXPos() <= 700:# frog is within the right side of the goal posts (the Water)
+                print("KICKING THE FROG back to the start. They hit the water. They didnt land close enough to goal post " + str(index))
                 playableCharacter.decreaseFrogLives()
                 playableCharacter.setXPos(300)  # reset frogs position to its initial position
                 playableCharacter.setYPos(840)
@@ -246,13 +272,13 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
                     else: # frog has no more lives
                         endScreen(screen) # call the game over screen function
             else:
-                '''Frog isnt on a log which means it must be touching the water blocks near the log, so reset frogs position
+                # Frog isnt on a log which means it must be touching the water blocks near the log, so reset frogs position
                 playableCharacter.setXPos(300)  # reset frogs position to the starting position at the beginning of the game
                 playableCharacter.setYPos(840)
                 if playableCharacter.getFrogLivesCount() > 0:  # as long as the frog has more than 0 lives
                     playableCharacter.decreaseFrogLives()  # Frog loses a life
                 else:  # frog has no more lives
-                    endScreen(screen)  # call the game over screen function  '''
+                    endScreen(screen)  # call the game over screen function
 
         if index % 2 != 0:  # check if the index / 2 remainder is NOT 0, if true then every ODD index or water log should come from the right side of the screen and MOVE LEFT
             log.moveLeft()  # make the log move to the left
