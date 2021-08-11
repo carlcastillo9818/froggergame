@@ -5,6 +5,13 @@
     Add a high scores screen.
     Do test runs of the game (let others test it too!)
 
+    8-11-21 Started work on the game screen that displays personal score of the player after the
+    game ends and allows for the player to enter their custom name in a text box.  The score and name are saved to a file of
+high scores and the player names. Also created the additional game screen which shows a high score screen after the
+player runs out of lives and this screen is displayed before the game over screen and after the personal score screen.
+Using the high scores text file, it displays  several scores along with several names including the players name and the
+players score which were captured in the enter personal score screen.
+
     8-8-21 Finished implementing the correct collision code between the frog character and the goal posts (frog will now
     land on each goal post correctly and gain the correct points and additional points if there is a dragonfly.) If
     the frog touches the rocks or the waters in the top row then it will lose a life and be sent back to the start!
@@ -139,6 +146,7 @@ TO THE OBJECTIVES BELOW.
 
      ALSO RUN THE GAME NEXT TIME TO SEE YOUR PROGRESS BEFORE MAKING ANY CHANGES
 """
+import json # for reading and writing to json files
 import os
 import pygame, sys
 from Frog import *
@@ -526,9 +534,39 @@ def playFroggerMusic():
     pygame.mixer.music.play(-1)
 
 
+'''This function displays a high score screen after the player runs out of lives and this
+screen is displayed before the game over screen.  Using the high scores text file, it displays 
+several scores along with several names including the players name and the 
+players score which were captured in the enter score screen.'''
+def displayHighScores():
+    filename = "highScores.txt" # name of the file to save data to
+
+    with open(filename, "r") as inFile:  # open file in read mode
+        # load the scores and names in the file into the player var
+        players = json.load(inFile)
+
+''' This function displays the personal score of the player after the game ends and allows
+for the player to enter their custom name in a text box.  The score and name are saved to a file of
+high scores and the player names.
+'''
+def savePersonalHighScore(playerFrog):
+    filename = "highScores.txt" # name of the file to save data to
+    userName = input("Enter your name here : ") # ask user for their name
+    userScore = playerFrog.getFrogHighScore() # retrieve the last reported high score of the player
+    userData = {"name" : userName, "score" : userScore} # store user data within dictionary of values
+
+    # open the file of scores and append the users name and the users score to the file
+    with open(filename, 'a') as outFile:  # open file in append mode
+        # store the python data into a file
+        outFile.write(json.dumps(userData, indent = 0))
+
+
+
 def main():
     SCREEN_HEIGHT = 900  # Set the width and height of the screen [width, height]
     SCREEN_WIDTH = 700
+
+
 
     # setup pygame and screen size and caption below
     pygame.init()
@@ -623,6 +661,7 @@ def main():
         scoreShown = font.render("High Score : " + str(playerFrog.getFrogHighScore()), True, BLACK, WHITE) # render score counter
 
         if playerFrog.getFrogLivesCount() <= 0: # players lives are 0 or less than 0
+            savePersonalHighScore(playerFrog) # change screen to the personal high score input screen
             endScreen(screen) # change screens to the game over screen
 
         #screen.blit(fps, (50, 50))  # draw the fps counter to the screen
