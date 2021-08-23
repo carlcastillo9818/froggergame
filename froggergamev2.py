@@ -1,9 +1,20 @@
 """
-     Pygame frogger game (1.91 build)
+     Pygame frogger game (1.95 build)
 
     TODO:
     Add a high scores screen.
     Do test runs of the game (let others test it too!)
+
+    8-23-21 ADDED A FEW NEW FUNCTIONS TO DISPLAY A SCREEN THAT LETS
+    USER ENTER THEIR SCORE AS WELL AS DISPLAY ALL THE HIGH SCORES
+    FROM THE SCORE FILE WITH THEIR RESPECTIVE NAMES.  STILL WORKING ON THIS.
+    NEXT TIME, WORK ON SETTING AN INPUT LIMIT SO USER CANT TYPE PAST THE SIZE OF THE SCREEN
+    WHEN INPUTTING THEIR PLAYER NAME.  AFTER THAT, FIGURE OUT HOW TO SAVE THEIR SCORE INTO A VARIABLE
+    AND CALL THE SAVEPERSONALHIGHSCORE FUNCTION TO SUBMIT THEIR SCORE AND THEIR PLAYER NAME
+    INTO THE HIGH SCORES FILE.  AFTER THAT IS DONE, CALL THE DISPLAYHIGHSCORES FUNCTION
+    WHICH WILL SET A NEW SCREEN THAT DISPLAYS ALL HIGH SCORES INCLUDING THE PLAYERS SCORE.
+    IF USER PRESSES A CERTAIN KEY THEN IT WILL TAKE THEM TO THE GAME OVER SCREEN. I ADDED BOOKMARKS TO THESE PARTS
+    OF THE PARTS OF THE PROGRAM TO FIND THEM EASILY.
 
     8-11-21 Started work on the game screen that displays personal score of the player after the
     game ends and allows for the player to enter their custom name in a text box.  The score and name are saved to a file of
@@ -482,10 +493,10 @@ def endScreen(screen):
 """This function provides the text to be displayed in the game over screen.
 A game over and continue text prompts will be rendered and blitted to the screen!"""
 def displayEndScreenText(screen):
-    font = pygame.font.Font("fonts/VarelaRound-Regular.ttf", 100)  # set type of font and the font size
+    font = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 100)  # set type of font and the font size
     gameOverMessage = font.render("Game Over!", True, WHITE)  # display that the game is over
 
-    font2 = pygame.font.Font("fonts/VarelaRound-Regular.ttf", 50)  # set type of font and the font size
+    font2 = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 50)  # set type of font and the font size
     continueMessage = font2.render("Continue? (Y/N)", True, WHITE)  # display continue msg
 
     sprite_sheet = SpriteSheet("images/GreenFrog.png") # sprite sheet to retrieve the frog image from
@@ -540,25 +551,122 @@ several scores along with several names including the players name and the
 players score which were captured in the enter score screen.'''
 def displayHighScores():
     filename = "highScores.txt" # name of the file to save data to
+    scores = [] # sorted list of scores and their matching user names
+
+    # before reading all the contents in the file, make sure that all the names and their scores are SORTED
+    # after sorting, read the contents and DISPLAY them to the screen
 
     with open(filename, "r") as inFile:  # open file in read mode
-        # load the scores and names in the file into the player var
-        players = json.load(inFile)
+        for line in inFile:
+            name, score = line.split(',') # splits the line into two variables with the comma as the separator value
+            score = int(score) # converts the score to an integer so it can be sorted properly
+            scores.append((name, score)) # add the name and score to the new list
+
+    # sort the list with the key. The key tells the method to sort by the score in each TUPLE -> (name, score) in ascending order!
+    scores.sort(key=lambda s: s[1])
+
+    for name, score in scores: # loop through the list of tuples
+        print(name, score) # print out each tuples individual values
+
 
 ''' This function displays the personal score of the player after the game ends and allows
 for the player to enter their custom name in a text box.  The score and name are saved to a file of
 high scores and the player names.
 '''
-def savePersonalHighScore(playerFrog):
+def savePersonalHighScore(screen, playerFrog):
+    '''
+    USE THE CODE BELOW TO HELP YOU CREATE THE GUI INPUT FOR THE USER!!!!
     filename = "highScores.txt" # name of the file to save data to
     userName = input("Enter your name here : ") # ask user for their name
     userScore = playerFrog.getFrogHighScore() # retrieve the last reported high score of the player
-    userData = {"name" : userName, "score" : userScore} # store user data within dictionary of values
 
-    # open the file of scores and append the users name and the users score to the file
-    with open(filename, 'a') as outFile:  # open file in append mode
+    # open the high scores file and APPEND the users name and the users score to the EXISTING file
+    # You dont have to worry about closing it manually, the with keyword does that at the end automatically
+    with open(filename, 'a') as outFile:
+        print("File opened successfully to append!")
         # store the python data into a file
-        outFile.write(json.dumps(userData, indent = 0))
+        outFile.write(userName + ", " + str(userScore))
+        outFile.write("\n")
+    '''
+
+
+
+def inputHighScoreScreen(screen, playerFrog):
+    # basic font for user typed
+    usertypingFont = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 32)
+    user_text = '' # user text will be blank initially
+
+    # create rectangle for user to enter their name
+    input_rect = pygame.Rect(200, 200, 240, 40)
+    # color_active stores color(lightskyblue3) which gets active when input box is clicked by user
+    color_active = pygame.Color(PURPLE)
+
+    # color_passive store color(chartreuse4) which is color of input box before user clicks on it
+    color_passive = pygame.Color(WHITE)
+    color = color_passive
+
+    labelFont = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 25)  # set type of font and the font size of the screen text labels
+    enterYourNameLabel = labelFont.render("Enter your name below!", True, WHITE)  # display that the game is over
+
+    active = False
+    # new game loop
+    while True:
+
+        for event in pygame.event.get():
+            # if user types QUIT then the screen will close
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if input_rect.collidepoint(event.pos):
+                    active = True
+                else:
+                    active = False
+
+            if event.type == pygame.KEYDOWN:
+                # Check for backspace
+                if event.key == pygame.K_BACKSPACE:
+                    # get text input from 0 to -1 i.e. end.
+                    user_text = user_text[:-1]
+                # Unicode standard is used for string
+                # formation
+                else:
+                    user_text += event.unicode
+
+                ''' 8-23-21
+                NEXT TIME, WORK ON SETTING AN INPUT LIMIT SO USER CANT TYPE PAST THE SIZE OF THE SCREEN
+                WHEN INPUTTING THEIR PLAYER NAME.  AFTER THAT, FIGURE OUT HOW TO SAVE THEIR SCORE INTO A VARIABLE
+                AND CALL THE SAVEPERSONALHIGHSCORE FUNCTION TO SUBMIT THEIR SCORE AND THEIR PLAYER NAME
+                INTO THE HIGH SCORES FILE.  AFTER THAT IS DONE, CALL THE DISPLAYHIGHSCORES FUNCTION
+                WHICH WILL SET A NEW SCREEN THAT DISPLAYS ALL HIGH SCORES INCLUDING THE PLAYERS SCORE.
+                IF USER PRESSES A CERTAIN KEY THEN IT WILL TAKE THEM TO THE GAME OVER SCREEN.
+                '''
+                print(user_text)
+                if len(user_text) > 10:
+                    print("user length text is over 10!")
+        # it will set background color of screen
+        screen.fill(BLACK)
+        if active:
+            color = color_active
+        else:
+            color = color_passive
+        # draw rectangle and argument passed which should
+        # be on screen
+        pygame.draw.rect(screen, color, input_rect)
+        text_surface = usertypingFont.render(user_text, True, (255, 255, 255))
+        # render at position stated in arguments
+        screen.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
+
+        # display a label to the screen that instructs the user to enter their name
+        screen.blit(enterYourNameLabel, (100, 100))  # draw the game over msg to the screen
+
+        # set width of textfield so that text cannot get
+        # outside of user's text input
+        input_rect.w = max(50, text_surface.get_width() + 10)
+        # display.flip() will update only a portion of the
+        # screen to updated, not full area
+        pygame.display.flip()
 
 
 
@@ -661,7 +769,8 @@ def main():
         scoreShown = font.render("High Score : " + str(playerFrog.getFrogHighScore()), True, BLACK, WHITE) # render score counter
 
         if playerFrog.getFrogLivesCount() <= 0: # players lives are 0 or less than 0
-            savePersonalHighScore(playerFrog) # change screen to the personal high score input screen
+            inputHighScoreScreen(screen, playerFrog) # change screen to the personal high score input screen
+            displayHighScores() # this function changes the screen to display all high scores from all players
             endScreen(screen) # change screens to the game over screen
 
         #screen.blit(fps, (50, 50))  # draw the fps counter to the screen
