@@ -5,6 +5,17 @@
     Add a high scores screen.
     Do test runs of the game (let others test it too!)
 
+
+    8-24-21
+    FIGURED OUT INPUT NAME LIMIT AND HOW TO SAVE THE PLAYERS SCORE INTO A VARIABLE.
+    YOU STILL HAVE TO CALL ON THE SAVEPERSONALHIGHSCORE FUNCTION TO SUBMIT PLAYER SCORE AND PLAYER NAME
+    INTO THE HIGH SCORES FILE.  AFTER THAT IS DONE, CALL THE DISPLAYHIGHSCORES FUNCTION
+    WHICH WILL SET A NEW SCREEN THAT DISPLAYS ALL HIGH SCORES INCLUDING THE PLAYERS SCORE.
+    IF USER PRESSES A CERTAIN KEY THEN IT WILL TAKE THEM TO THE GAME OVER SCREEN. I ADDED BOOKMARKS TO THESE PARTS
+    OF THE PARTS OF THE PROGRAM TO FIND THEM EASILY.
+
+
+
     8-23-21 ADDED A FEW NEW FUNCTIONS TO DISPLAY A SCREEN THAT LETS
     USER ENTER THEIR SCORE AS WELL AS DISPLAY ALL THE HIGH SCORES
     FROM THE SCORE FILE WITH THEIR RESPECTIVE NAMES.  STILL WORKING ON THIS.
@@ -592,26 +603,32 @@ def savePersonalHighScore(screen, playerFrog):
 
 
 def inputHighScoreScreen(screen, playerFrog):
+
+    # custom background for this screen
+    bg = pygame.image.load("images/backgroundForGame(MadebyMe)V1.png")
+
     # basic font for user typed
-    usertypingFont = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 32)
+    usertypingFont = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 100)
     user_text = '' # user text will be blank initially
+    nameLimit = 2 # the users input text cannot surpass this number!!!
 
     # create rectangle for user to enter their name
-    input_rect = pygame.Rect(200, 200, 240, 40)
-    # color_active stores color(lightskyblue3) which gets active when input box is clicked by user
-    color_active = pygame.Color(PURPLE)
+    input_rect = pygame.Rect(200, 200, 240, 100)
 
-    # color_passive store color(chartreuse4) which is color of input box before user clicks on it
-    color_passive = pygame.Color(WHITE)
-    color = color_passive
+    # create a rectangle for user to SUBMIT their name (score will also be submitted!)
+    submitRect = pygame.Rect(240,400,240,100)
 
-    labelFont = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 25)  # set type of font and the font size of the screen text labels
-    enterYourNameLabel = labelFont.render("Enter your name below!", True, WHITE)  # display that the game is over
+    labelFont = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 40)  # set type of font and the font size of the screen text labels
+    labelFont2 = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 35)  # set type of font and the font size of the screen text labels
 
-    active = False
+    enterYourNameLabel = labelFont.render("Enter your name!", True, WHITE)  # tell the user to enter their name
+
+    submitLabel = labelFont.render("Submit", True, WHITE) # tells the user to submit their name (and score)
+
+    userScoreLabel = labelFont2.render("Your High Score: " + str(playerFrog.getFrogHighScore()), True, WHITE) # retrieve the last reported high score of the player
+
     # new game loop
     while True:
-
         for event in pygame.event.get():
             # if user types QUIT then the screen will close
             if event.type == pygame.QUIT:
@@ -620,50 +637,56 @@ def inputHighScoreScreen(screen, playerFrog):
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if input_rect.collidepoint(event.pos):
-                    active = True
+                    print("Input rect x : " + str(input_rect.x))
+                    print("Input rect y : " + str(input_rect.y))
+                    print("Clicking over input field")
                 else:
-                    active = False
+                    print("Not clicking over input field")
 
-            if event.type == pygame.KEYDOWN:
-                # Check for backspace
+            if event.type == pygame.KEYDOWN: # user is pressing down some key on the keyboard
+                # Check for backspace key press
                 if event.key == pygame.K_BACKSPACE:
+                    print("pressing backspace")
                     # get text input from 0 to -1 i.e. end.
                     user_text = user_text[:-1]
                 # Unicode standard is used for string
                 # formation
-                else:
-                    user_text += event.unicode
+                else: # must be another key getting pressed that isnt the backspace
+                    if not len(user_text) > nameLimit:  # name is under the NAME LENGTH LIMIT so just add the new text to it
+                        print("pressing another key in the keyboard (a-z,0-9,etc.) but not backspace!")
+                        user_text += event.unicode
+                    else:
+                        print("unable to enter anymore keys due to surpassing name limit!!!")
+                    # if users text passes a certain number then dont let them enter anymore characters.
+                    # they can still backspace however and this will undo the limitation
 
-                ''' 8-23-21
-                NEXT TIME, WORK ON SETTING AN INPUT LIMIT SO USER CANT TYPE PAST THE SIZE OF THE SCREEN
-                WHEN INPUTTING THEIR PLAYER NAME.  AFTER THAT, FIGURE OUT HOW TO SAVE THEIR SCORE INTO A VARIABLE
-                AND CALL THE SAVEPERSONALHIGHSCORE FUNCTION TO SUBMIT THEIR SCORE AND THEIR PLAYER NAME
-                INTO THE HIGH SCORES FILE.  AFTER THAT IS DONE, CALL THE DISPLAYHIGHSCORES FUNCTION
-                WHICH WILL SET A NEW SCREEN THAT DISPLAYS ALL HIGH SCORES INCLUDING THE PLAYERS SCORE.
-                IF USER PRESSES A CERTAIN KEY THEN IT WILL TAKE THEM TO THE GAME OVER SCREEN.
-                '''
-                print(user_text)
-                if len(user_text) > 10:
-                    print("user length text is over 10!")
+
         # it will set background color of screen
         screen.fill(BLACK)
-        if active:
-            color = color_active
-        else:
-            color = color_passive
-        # draw rectangle and argument passed which should
-        # be on screen
-        pygame.draw.rect(screen, color, input_rect)
+        screen.blit(bg, (0,0)) # add custom background to the screen
+
+
+        # draw user input rectangle and argument passed which should be on screen
+        pygame.draw.rect(screen, BLACK, input_rect)
         text_surface = usertypingFont.render(user_text, True, (255, 255, 255))
-        # render at position stated in arguments
+
+        # draw submit button rectangle
+        pygame.draw.rect(screen,BLUE,submitRect)
+
+        # render text surface (where players text will appear) at position stated in arguments
         screen.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
 
         # display a label to the screen that instructs the user to enter their name
-        screen.blit(enterYourNameLabel, (100, 100))  # draw the game over msg to the screen
+        screen.blit(enterYourNameLabel, (50, 50))  # blit the label to the screen
 
-        # set width of textfield so that text cannot get
-        # outside of user's text input
-        input_rect.w = max(50, text_surface.get_width() + 10)
+        # display a label to the screen that instructs the user to submit their name (and score)
+        screen.blit(submitLabel, (240, 420))  # blit this label to the screen
+
+        screen.blit(userScoreLabel, (0,600))
+
+        # set width of textfield so that text cannot get outside of user's text input
+        input_rect.w = max(300, text_surface.get_width() + 10)
+
         # display.flip() will update only a portion of the
         # screen to updated, not full area
         pygame.display.flip()
