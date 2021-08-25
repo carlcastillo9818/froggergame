@@ -2,9 +2,17 @@
      Pygame frogger game (1.95 build)
 
     TODO:
-    Add a high scores screen.
     Do test runs of the game (let others test it too!)
 
+    8-25-21
+    Finished the InputHighScoreScreen function which allowsp player to submit a 3 character name
+    and also finished the SavePersonalHighScore function which saves players name & score
+    into the high scores txt file.  In addition, I finished the DISPLAYHIGHSCORES FUNCTION
+    which reads in high scores from the existing txt file then it displays all high scores and the player names.
+    The function also lets the player continue to the game over screen and then they can restart the game or quit.
+    All thats left to do for the game is rearrange some items positions in the high score screens and enable the music
+    again. After that I have to go through the entire program line by line and make sure any unnecssary code is deleted.
+    Test runs must also be done and after that I'll call the project finished!
 
     8-24-21
     FIGURED OUT INPUT NAME LIMIT AND HOW TO SAVE THE PLAYERS SCORE INTO A VARIABLE.
