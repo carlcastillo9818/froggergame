@@ -1,182 +1,18 @@
 """
-     Pygame frogger game (1.95 build)
+This program is a game that plays like the popular game "Frogger"
+It involves the player (a frog) having to cross
+through several streets of traffic (cars) and some paths of grass.  After surviving that, they have to
+cross through a river full of logs that are moving along the water.  The frog can traverse using those logs
+and reach several caves which are the destination goals.  Each cave rewards points and in addition there
+is a dragonfly that moves very fast but if it is caught by the frog then bonus points are rewarded.
+If the player loses all their lives, they can submit their score to the leaderboard and end the game or
+restart it.
 
-    TODO:
-    Do test runs of the game (let others test it too!)
-
-    8-25-21
-    Finished the InputHighScoreScreen function which allowsp player to submit a 3 character name
-    and also finished the SavePersonalHighScore function which saves players name & score
-    into the high scores txt file.  In addition, I finished the DISPLAYHIGHSCORES FUNCTION
-    which reads in high scores from the existing txt file then it displays all high scores and the player names.
-    The function also lets the player continue to the game over screen and then they can restart the game or quit.
-    All thats left to do for the game is rearrange some items positions in the high score screens and enable the music
-    again. After that I have to go through the entire program line by line and make sure any unnecssary code is deleted.
-    Test runs must also be done and after that I'll call the project finished!
-
-    8-24-21
-    FIGURED OUT INPUT NAME LIMIT AND HOW TO SAVE THE PLAYERS SCORE INTO A VARIABLE.
-    YOU STILL HAVE TO CALL ON THE SAVEPERSONALHIGHSCORE FUNCTION TO SUBMIT PLAYER SCORE AND PLAYER NAME
-    INTO THE HIGH SCORES FILE.  AFTER THAT IS DONE, CALL THE DISPLAYHIGHSCORES FUNCTION
-    WHICH WILL SET A NEW SCREEN THAT DISPLAYS ALL HIGH SCORES INCLUDING THE PLAYERS SCORE.
-    IF USER PRESSES A CERTAIN KEY THEN IT WILL TAKE THEM TO THE GAME OVER SCREEN. I ADDED BOOKMARKS TO THESE PARTS
-    OF THE PARTS OF THE PROGRAM TO FIND THEM EASILY.
-
-
-
-    8-23-21 ADDED A FEW NEW FUNCTIONS TO DISPLAY A SCREEN THAT LETS
-    USER ENTER THEIR SCORE AS WELL AS DISPLAY ALL THE HIGH SCORES
-    FROM THE SCORE FILE WITH THEIR RESPECTIVE NAMES.  STILL WORKING ON THIS.
-    NEXT TIME, WORK ON SETTING AN INPUT LIMIT SO USER CANT TYPE PAST THE SIZE OF THE SCREEN
-    WHEN INPUTTING THEIR PLAYER NAME.  AFTER THAT, FIGURE OUT HOW TO SAVE THEIR SCORE INTO A VARIABLE
-    AND CALL THE SAVEPERSONALHIGHSCORE FUNCTION TO SUBMIT THEIR SCORE AND THEIR PLAYER NAME
-    INTO THE HIGH SCORES FILE.  AFTER THAT IS DONE, CALL THE DISPLAYHIGHSCORES FUNCTION
-    WHICH WILL SET A NEW SCREEN THAT DISPLAYS ALL HIGH SCORES INCLUDING THE PLAYERS SCORE.
-    IF USER PRESSES A CERTAIN KEY THEN IT WILL TAKE THEM TO THE GAME OVER SCREEN. I ADDED BOOKMARKS TO THESE PARTS
-    OF THE PARTS OF THE PROGRAM TO FIND THEM EASILY.
-
-    8-11-21 Started work on the game screen that displays personal score of the player after the
-    game ends and allows for the player to enter their custom name in a text box.  The score and name are saved to a file of
-high scores and the player names. Also created the additional game screen which shows a high score screen after the
-player runs out of lives and this screen is displayed before the game over screen and after the personal score screen.
-Using the high scores text file, it displays  several scores along with several names including the players name and the
-players score which were captured in the enter personal score screen.
-
-    8-8-21 Finished implementing the correct collision code between the frog character and the goal posts (frog will now
-    land on each goal post correctly and gain the correct points and additional points if there is a dragonfly.) If
-    the frog touches the rocks or the waters in the top row then it will lose a life and be sent back to the start!
-    I also started drawing a concept for a high scores screen which I will implement next time (hopefully its not
-    super tricky!) then after that I only need to test the game out and it should be done.
-
-    8-7-21 Continuing to refine the collision code between the frog, the water, the goal posts, and the rocks all in the
-    top row only!
-
-    8-5-21 Finished start menu screen.  Working on collision testing between frog and goal posts (not done yet!)
-
-    7-16-21 Filled text files with credits to all those artists I mentioned. I moved all tilesets and spritesheets into the
-    new folder I created just for those files, as well as moved all audio and fonts into their own folders.
-    Fixed the issue with the water blocks at the very top row because before the frog could still land on them without drowning.
-    I also adjusted the size of the lives and score counters at the top left because they were too small before.
-
-
-    7-15-21 Started working on a start menu or title screen before the game starts.  Still need to do the following tasks
-    listed above in the TODO list.
-
-    7-10-21 Tuned the collision between the frog, the dragonfly, and each goal post. Added tilesets for water blocks,
-    grass blocks, and road blocks. Placed the new blocks into the game and they look good.
-     Credits to StremArt for the grass tileset, credits to TearofTheStar for the water
-    tileset.  I added background music to the game (credits to Kevin MacLeod). I also added
-     text files to give credits to all those artists I mentioned, it is located in the game folder.
-    For next time, consider adding frog sounds (optional), check the
-    collisions between the frog and the goal posts AGAIN (just to be safe), also check the water blocks at the very top
-    row because currently the frog can still land on them without drowning.  Adjust the size of the lives and score
-    counters at the top left if you think they are too small.  Move all tilesets and spritesheets into the new
-    folder I created just for those files.  The last thing to add would be a start menu
-    or title screen before the game starts, check google for that.
-
-    7-8-21 Focus on fine tuning the collision between the frog, the dragonfly, and each goal post.  Make sure high scores
-    get updated and lives get updated correctly.  After all that is finished then you can focus on implementing sound
-    and MAYBE a start menu but its not necessary for this project.
-
-    6-??-21 Next time, work on making the dragonfly move from goalpost to goalpost so that the player has to be careful when
-    moving their frog to the goals.  If the frog succeeds in getting the dragonfly, the players high score should go up.
-    If the frog misses the dragonfly, they will fall into the goalpost (frog home) and be reset to the starting position
-    , and if they are out of lives then its GAME OVER!
-
-    6-22-21 Added code for if log goes off screen, frog goes back to starting position and loses a life.
-    Also added code for if log goes off screen and frog has 1 life, then it goes to game over screen.  Made the water
-    dangerous for the frog to land in and if the frog does touch it then it drowns, loses a life, and if it has 1 life
-    left then it results in a game over when that life is removed.  Added one static dragonfly (non moving for now).
-    (CREDITS TO ELTHEN FOR THE DRAGONFLY IMAGE AND CREDITS TO KAUZZ FOR THE CAVE ROCKS IMAGES)
-
-    6-20-21 ADDED SEVERAL MOVING LOGS IN THE WATER FOR FROG TO JUMP ONTO AND NAVIGATE ACROSS TO THE GOAL.  ALSO
-    I CREATED A NEW CLASS CALLED RIVERLOG SO I COULD MAKE LOG OBJECTS TO ADD TO A LIST OF LOGS BELOW. ADDED A SPRITE SHEET
-    TO BE USED FOR THE LOGS CALLED RPG NATURE TILESET (CREDITS TO STEALTHIX FOR MAKING THE TILESET, YOUR ART IS GREAT.)
-
-    6-6-21 Fixed lives system so it doesnt
-    go into the negative values.  It will just be a game over when it reaches 0.
-    Added a game over screen!  Added a music file to the folder of the game so implement that
-    when you can. (Finished all this)
-
-    6-6-21 Implemented working collision between all cars and the frog finally!
-
-    5-18-21 Working on the points/lives system (I went with lives)
-
-    5/4/21 - MADE SCREEN TALLER AND WIDER AND THEN ADJUSTED EVERYTHING TO SCALE! I ADDED ANOTHER ROAD AND ANOTHER GRASS SECTION.
-    I ADDED A GOAL SPOT AT THE TOP (CURRENTLY PURPLE).
-
-
-     4/24/21 Took a break from this project since I did so much earlier this month.  Still working on fixing
-     animations for the frog so thaht when it moves left and right, the animations loop smoothly and the frog
-     doesnt get stuck on one sprite image.
-
-    4/10/21 CHANGE HOW THE FROG MOVES (USE TIME DELAY FROM SAMPLEMOVEMENT2 TO HELP YOU AS REFERENCE) (Finished this!)
-
-    4/9/21 started working on making frog sprite pictures update BLOCK BY BLOCK.  run the program to see.
-
-    
-    4/9/21 I put a hold on the collision detection.  Instead I started working on making the frog
-    move as if its moving along an invisible grid.  It still moves continously in any direction
-    BUT now it moves as if its moving BLOCK BY BLOCK.  Run the samplemovement2 python file
-    to see an example of the block by block movement.
-
-    4/6/21 Started working on collision detection between frog and car1 and car2
-
-    4/6/21 Optimized the repaint function so its shorter than before but still produces same result.  Also added an FPS counter
-    to track fps drops.
-
-    4/5/21 Succeeded in ADDING THE REST OF THE DIFFERENT COLOR CAR SPRITE IMAGES SO EACH TIME A NEW CAR COMES OUT OF THE LEFT
-    OR RIGHT WALL THEN ITS A DIFFERENT COLORED CAR SPRITE! I MOVED ON FROM USING THE SIMPLE RECTANGLE SHAPES!
-
-    3/27/21  Added another water rectangle to the game, added up/down animations for the frog, added INITIAL car image for each car.
-
-    3/21/21 Added water rectangle, another car, and another road to the game!
-
-
-    3/18/21 I added the frogs walking left and walking right animations into the game!
-    I still have to add another road, add more cars, then add a little pond at the top of the level.
-    Also I still have to add UP and DOWN frog animations into the game (Use sprite sheet)
-    (make it a generic blue color for now).  Also I still have to add a scoreboard at the top.
-    Perhaps I can also add custom sprites for the automobiles too.
-
-    For my NEXT GAME, I will make the character from scratch (my own custom sprites).  For this game, I will
-    borrow the Frog sprites from the game Tomba to finish this project faster.
-
-
-    3/18/21 I eliminated the speed parameter for the vehicles moving left or right because the formula looked
-    too complex for what I'm trying to do.  I also eliminated the SPEED constant in my main program as a result.
-    I went into the Automobile class and changed self.speed to self.change_x because its more clear that way
-    that the variable is changing the SPEED of the X vector (left and right).  I adjusted the moveleft,moveright,
-    and changespeed methods as needed.
-
-
-    3/17/21 I added a frog sprite image to my game for my frog character.  Now go to this link
-    http://programarcadegames.com/python_examples/en/sprite_sheets/ and look at how the dev
-    creates walking animations for his character then do something similar to that.  Use lists,
-    image property, and appending to the list to make two lists (one for moving left "animations" and one for moving
-    right "animations")
-    Use the frog sprite sheet from  here https://www.spriters-resource.com/fullview/145236/
-    Also add another road, add more cars, then add a little pond at the top of the level
-    (make it a generic blue color for now)
-
-    3/17/21 REPLACED GREEN BLOCK WITH A FROG SPRITE that I FOUND online!  Added animations to Frog Character only (for now!)
-
-
- 3/9/21 WROTE A FUNCTION TO HANDLE CREATION OF ROADS AND ANOTHER FUNCTION TO HANDLE CREATION OF ROAD MARKS SEPARATELY!
-
-3/2/21 ADDED ANOTHER ROAD AND MORE ROADMARKS.  FIND A WAY TO MAKE THE PROCESS OF CREATING THEM EASIER! THEN MOVE ON
-TO THE OBJECTIVES BELOW.
-
-    3/1/21 LAST THING YOU WORKED ON WAS ROADMARKS (THE YELLOW MARKS ON THE ROADS)
-
-    2/28/21 NEXT TIME, WORK ON THE COLLISION DETECTION BETWEEN EACH CAR AND FROG,
-     ADD ROADS, ADD BETTER SPACING BETWEEN EVERY SPRITE, FIND OR MAKE YOUR OWN CAR SPRITES, AND FIND A WAY TO ADD
-     SOUNDS (FOR THE CAR, OR BACKGROUND MUSIC, OR FROG SOUNDS), AND ADD A POINT SYSTEM TO KEEP TRACK OF PLAYER SCORE,
-     AND MAKE YOUR OWN BACKGROUND WITH ROADS AND DIRT AND GRASS AND WATER...THATS IT FOR NOW LOL.
-
-     ALSO RUN THE GAME NEXT TIME TO SEE YOUR PROGRESS BEFORE MAKING ANY CHANGES
+Note: If high score board becomes too full then simply go to the folder that has the game files
+,look for highScores.txt and delete some names and scores from it.  Make a backup of the original
+highScores.txt file in case you break the game by modifying it and want to restore it to working order.
 """
-import json # for reading and writing to json files
+
 import os
 import pygame, sys
 from Frog import *
@@ -191,107 +27,105 @@ from dragonFly import *
 
 '''
 This function process input keys pressed by the player (moving the frog in different directions for instance).
-It runs a for loop that runs when events occur like pressing keys down, releasing keys.  Pressing the escape key
-will allow the game to end.  If any arrow keys are pressed and released then the playable characters will stop moving.
-After the for loop, a collection of key movements are stored and if a key is pressed then the playable character will 
-move left,right,up,or down.  The function returns a boolean var that will end the game if the game is exitted or the player
-presses the escape key, otherwise it will continue running the game as long as it is false.
+It checks for events occurring like pressing keys down, releasing keys, etc. If any arrow keys are pressed 
+and released then the playable characters will stop moving. In addition a collection of key movements are stored and 
+if a key is pressed then the playable character can move in any direction.  The function returns a boolean var 
+that will end the game if the game is exited or the player presses the escape key, 
+otherwise it will continue running the game as long as it is false.
 '''
 def process_game_events(playableCharacter, endTheGame):
     # --- Main event loop
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT: # check if the game is exited
             endTheGame = True
-        elif event.type == pygame.KEYDOWN:  # if the key is held down
+        elif event.type == pygame.KEYDOWN:  # if a key is held down
             if event.key == pygame.K_ESCAPE:  # Pressing the escape Key will quit the game
                 endTheGame = True
-        elif event.type == pygame.KEYUP:  # if the key is released
-            if event.key == pygame.K_LEFT and playableCharacter.change_x < 0:  # check if the left arrow key is pressed and released AND check if the frogs speed is less than 0
-                playableCharacter.stop()  # make the frog stop moving (This sets its speed to 0 so its resting)
-            if event.key == pygame.K_RIGHT and playableCharacter.change_x > 0:  # check if the right arrow key is pressed and released AND check if the frogs speed is greater than 0
-                playableCharacter.stop()  # make the frog stop moving (This sets its speed to 0 so its resting)
+        elif event.type == pygame.KEYUP:  # if a key is released
+            if event.key == pygame.K_LEFT and playableCharacter.change_x < 0:
+                # check if the left arrow key is pressed and released AND if the frogs speed is less than 0
+                playableCharacter.stop()  # make the frog stop moving
+            if event.key == pygame.K_RIGHT and playableCharacter.change_x > 0:
+                # check if the right arrow key is pressed and released AND if the frogs speed is greater than 0
+                playableCharacter.stop()
             if event.key == pygame.K_UP and playableCharacter.change_y < 0:
+                # check if the up arrow key is pressed and released AND  if the frogs speed is less than 0
                 playableCharacter.stop()
             if event.key == pygame.K_DOWN and playableCharacter.change_y > 0:
+                # check if the down arrow key is pressed and released AND if the frogs speed is greater than 0
                 playableCharacter.stop()
 
-    keys = pygame.key.get_pressed()  # KEEP ALL THESE Key MOVEMENTS INSIDE THE ELIF SO CHARACTER MOVES NON-CONTINOUSLY OTHERWISE IGNORE THIS
+    # KEEP ALL THESE KEY MOVEMENTS INSIDE THE ELIF SO CHARACTER MOVES NON-CONTINOUSLY OTHERWISE IGNORE THIS
+    # using elif makes it so if a user presses left and right, game only processes the last direction pressed
+    # place keys under the for loop instead if you want CONTINUOUS MOVEMENT LIKE ASTEROIDS OR MARIO
+
+    # event handlers for moving frog using arrow keys
+    keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
         playableCharacter.moveLeft()
-    elif keys[pygame.K_RIGHT]:  # using elif makes it so if a user presses left and right, game only processes the last direction pressed
+    elif keys[pygame.K_RIGHT]:
         playableCharacter.moveRight()
     elif keys[pygame.K_UP]:
         playableCharacter.moveUp()
     elif keys[pygame.K_DOWN]:
         playableCharacter.moveDown()
-    # event handlers for moving frog using arrow keys above ^^^
-    # place keys under the for loop instead if you want CONTINUOUS MOVEMENT LIKE ASTEROIDS OR MARIO
+    return endTheGame # return flag var which can end the game if its value is True
 
-    return endTheGame
-
+# Continue at Line 166 Carlos! 9-9-21
 
 '''
 This function updates all objects that need to be updated, e.g. position changes, physics, all that other stuff.
-More specifically, it checks for which enemies need to go left and which need to go right.  It adjusts enemy attributes 
-like color, speed, x position along the way. It also adjusts river log attributes like their direction and speed.  
-Then it checks wall boundaries and finally it updates the movable sprites list.
+More specifically, it checks for which enemies need to go left or right.  It adjusts enemy attributes 
+like color, speed, and their position. It also adjusts river log attributes like their direction and speed.
+It checks for collision between the frog and the following : cars, goal posts, water, left and right sides of the screen, 
+and dragonfly. Finally it updates the movable sprites list.
 '''
 def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesList, enemySpritesList, riverLogSpritesList, insectToEat, goalPosts):
     # --- Game logic should go in this function
-    # check for collision between frog and dragonfly
 
+    # check for collision between frog and dragonfly
     insectToEat.teleportAround() # call the method to make the insect move to each goal post
     if playableCharacter.getYPos() == insectToEat.getYPos():  # check if the frogs y position is equal to the dragonfly y position (at the same y coordinate level)
-        pixels = 20  # number of pixels to add to the players x position or the logs x position
+        pixels = 20  # number of pixels to add to the player or insect x pos
         if (insectToEat.getXPos() < playableCharacter.getXPos() < (
                 insectToEat.getXPos() + pixels)) or (
                 insectToEat.getXPos() < (playableCharacter.getXPos() + pixels) < (
                 insectToEat.getXPos() + pixels)):
-            playableCharacter.bonusHighScore() # give a bonus high score to the frog (in addition to their regular high score)
+            playableCharacter.bonusHighScore() # give a bonus high score to the frog
             playableCharacter.setXPos(300)  # move the frog back to its default position
             playableCharacter.setYPos(840)
 
-    print("Current frog x and y coordinates are : " + str(playableCharacter.getXPos()) + " , " + str(playableCharacter.getYPos()))
     # check for collision between frog and each goal post
     for index,goal in enumerate(goalPosts):
         leftPixels = 16  # number of left pixels (to be added to the x positions)
         rightPixels = 35 # number of right pixels (to be added to the x positions)
-        print("current index is " + str(index))
         if goal.getXPos() - leftPixels <= playableCharacter.getXPos() <= goal.getXPos() + rightPixels and playableCharacter.getYPos() == goal.getYPos():
             '''check if the frogs x position is in between the current goals x position and the x position + an amount of extra 
             pixels and they have the same y coordinate. Imagine a box within a bigger box so it makes more sense.'''
-            print("your frog was closest to goal post " + str(index))
-            print("your frog was locked in to the y coord of goal post " + str(index))
-            print("victory! you touched goal post " + str(index) + "!")
-            playableCharacter.increaseHighScore()
+            playableCharacter.increaseHighScore() # increase the current score
             playableCharacter.setXPos(300)  # move the frog back to its default position
             playableCharacter.setYPos(840)
 
     for index,goal in enumerate(goalPosts):
-        # check if the frog lands anywhere besides the goal posts (either the rocks or the waters in the first row)
+        # check if the frog lands in the rocks or the first row of water (next to each goal post)
         if playableCharacter.getYPos() == goal.getYPos(): # frog and goal posts have same Y coordinate
             if 0 <= playableCharacter.getXPos() < 150: # frog is within the left side of the goal posts (the water)
-                print("KICKING THE FROG back to the start. They hit the water. They didnt land close enough to goal post " + str(index))
-                playableCharacter.decreaseFrogLives()
+                playableCharacter.decreaseFrogLives() # frog loses a life
                 playableCharacter.setXPos(300)  # reset frogs position to its initial position
                 playableCharacter.setYPos(840)
-            elif 190 <= playableCharacter.getXPos() < 248: # frog hit the first rock (Starting from the left)
-                print("KICKING THE FROG back to the start. They hit the rock. They didnt land close enough to goal post " + str(index))
+            elif 190 <= playableCharacter.getXPos() < 248: # frog hit the first rock
                 playableCharacter.decreaseFrogLives()
                 playableCharacter.setXPos(300)  # reset frogs position to its initial position
                 playableCharacter.setYPos(840)
             elif 300 <= playableCharacter.getXPos() < 360: # frog hit the second rock
-                print("KICKING THE FROG back to the start. They hit the second rock. They didnt land close enough to goal post " + str(index))
                 playableCharacter.decreaseFrogLives()
                 playableCharacter.setXPos(300)  # reset frogs position to its initial position
                 playableCharacter.setYPos(840)
             elif 420 <= playableCharacter.getXPos() < 494: # frog hit the third rock
-                print("KICKING THE FROG back to the start. They hit the third rock. They didnt land close enough to goal post " + str(index))
                 playableCharacter.decreaseFrogLives()
                 playableCharacter.setXPos(300)  # reset frogs position to its initial position
                 playableCharacter.setYPos(840)
             elif 540 <= playableCharacter.getXPos() <= 700:# frog is within the right side of the goal posts (the Water)
-                print("KICKING THE FROG back to the start. They hit the water. They didnt land close enough to goal post " + str(index))
                 playableCharacter.decreaseFrogLives()
                 playableCharacter.setXPos(300)  # reset frogs position to its initial position
                 playableCharacter.setYPos(840)
@@ -300,14 +134,18 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
     for index,log in enumerate(riverLogSpritesList):
         pixels = 50 # number of pixels to add to the players x position or the logs x position
         if playableCharacter.getYPos() == log.getYPos():  # check if the frogs y position is equal to the logs y position (at the same y coordinate level)
-            if (playableCharacter.getXPos() > log.getXPos() and playableCharacter.getXPos() < (log.getXPos() + pixels)) or ((playableCharacter.getXPos() + pixels) > log.getXPos() and (playableCharacter.getXPos() + pixels) < (log.getXPos() + pixels)):
+            if (log.getXPos() < playableCharacter.getXPos() < (log.getXPos() + pixels)) or (
+                    log.getXPos() < (playableCharacter.getXPos() + pixels) < (log.getXPos() + pixels)):
                 playableCharacter.setXPos(log.getXPos()) # set frogs x pos to the logs x pos
-                if log.getXPos() > 690 or log.getXPos() < -55: # as soon as log leaves the screen (the left or right sides)
+                if log.getXPos() > 690 or log.getXPos() < -55:
+                    # as soon as log leaves the screen (the left or right sides)
                     playableCharacter.setXPos(300) # move the frog back to its default position
                     playableCharacter.setYPos(840)
-                    if playableCharacter.getFrogLivesCount() > 0: # as long as the frog has more than 0 lives
+                    if playableCharacter.getFrogLivesCount() > 0:
+                        # as long as the frog has more than 0 lives
                         playableCharacter.decreaseFrogLives() # Frog loses a life
-                    else: # frog has no more lives
+                    else:
+                        # frog has no more lives
                         endScreen(screen) # call the game over screen function
             else:
                 # Frog isnt on a log which means it must be touching the water blocks near the log, so reset frogs position
@@ -322,16 +160,16 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
             log.moveLeft()  # make the log move to the left
             if log.getXPos() < -100:  # check if the logs x position is less than the left side of the screen (0 or any neg value)
                 # randint and choice come from the random library but you dont need to include the word random in front because I imported * from random
-                log.changeSpeed(randint(3,4)) #adjust speed
+                log.changeSpeed(randint(2,3)) #adjust speed
                 log.setXPos(700)   # set x position of the river log to come before the right side of the screen
         else:  # remainder is 0 so logs will come from the left side of the screen, hence they will move RIGHT
             log.moveRight()  # make the river log move to the right
             if log.getXPos() > SCREEN_WIDTH:  # check if the river logs x position is greater than the right side of the screen
-                log.changeSpeed(randint(3, 4))  # adjust speed
+                log.changeSpeed(randint(2, 3))  # adjust speed
                 log.setXPos(-50)  # set x position of the log to come before the left side of the screen
 
-
-    for index, car in enumerate(enemySpritesList):  # enumerate gets the index with the element as you iterate through the list of automobiles
+    # enumerate gets the index with the element as you iterate through the list of automobiles
+    for index, car in enumerate(enemySpritesList):
         if index % 2 != 0:  # check if the index / 2 remainder is NOT 0, if true then every ODD index or vehicle should come from the right side of the screen and MOVE LEFT
             car.moveLeft()  # make the car drive to the left
             if car.rect.x < -100:  # check if the cars x position is less than the left side of the screen (0 or any neg value)
@@ -361,9 +199,11 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
                 playableCharacter.setYPos(840)
                 playableCharacter.decreaseFrogLives()  # decrease the frogs lives after its been hit
 
-    if playableCharacter.getXPos() < 0 and playableCharacter.getYPos() > 400:  # left wall boundary prevents frog from leaving the screen in the grass and road portion of the level only
+    # left wall boundary prevents frog from leaving the screen in the grass and road portion of the level only
+    if playableCharacter.getXPos() < 0 and playableCharacter.getYPos() > 400:
         playableCharacter.setXPos(0)
-    if playableCharacter.getXPos() > 640 and playableCharacter.getYPos() > 400:  # right wall boundary prevents frog from leaving the screen in the grass and road portion of the level only
+    # right wall boundary prevents frog from leaving the screen in the grass and road portion of the level only
+    if playableCharacter.getXPos() > 640 and playableCharacter.getYPos() > 400:
         playableCharacter.setXPos(640)
     if playableCharacter.getYPos() > 840:  # bottom boundary
         playableCharacter.setYPos(840)
@@ -372,17 +212,14 @@ def update_game_objects(screen, SCREEN_WIDTH, playableCharacter, movableSpritesL
 
 
     movableSpritesList.update()  # update the sprites in the list (this list gets updated because the sprites in here all move around)
-    # because all the enemy cars are in this list, you dont need to update the other list (which has the same cars)
+    # because all the enemy cars are in this list, you dont need to update the other list (which has the same vehicles)
 
     # --- Screen-clearing code goes here
-
     # Here, we clear the screen to white. Don't put other drawing commands
     # above this, or they will be erased with this command.
-
     # If you want a background image, replace this clear with blit'ing the
     # background image.
     screen.fill(WHITE)
-
     # blit the CUSTOM BACKGROUND
     # screen.blit(backgroundimg, (0, 0))
 
@@ -394,12 +231,10 @@ updates the entire screen with whats been drawn.
 def draw_game_objects(screen, movableSpritesList, backgroundObjectsList):  # render things on screen
 
     # --- Drawing code should go in this function
-    backgroundObjectsList.draw(screen)
-    # Let's draw all the sprites in one go. (the ones from the sprites list will go above background)
+    backgroundObjectsList.draw(screen)  # background objects come first
+    # Let's draw all the sprites in one go. (the ones from the sprites list will go above background objects)
     movableSpritesList.draw(screen)
-
-    '''
-        note from 2/18:  DO NOT ADD your background to the sprites list
+    '''note from 2/18:  DO NOT ADD your background to the sprites list
         BECAUSE when the draw method is called above, it will draw your
         frog to the screen AS WELL AS the background so your background will
         end up covering the frog and you wont know unless your frog is
@@ -407,9 +242,7 @@ def draw_game_objects(screen, movableSpritesList, backgroundObjectsList):  # ren
         from the sprites list in an earlier part of the program.  If you want to
         see what happens then add it back to the sprites list, it will cause
         issues so be careful.  Keep the background separate from the sprites list
-        which should only hold the sprites that will be above the background
-        '''
-
+        which should only hold the sprites that will be above the background'''
     # --- Go ahead and update the ENTIRE screen with what we've drawn.
     pygame.display.flip()
 
@@ -418,15 +251,15 @@ def draw_game_objects(screen, movableSpritesList, backgroundObjectsList):  # ren
 This function creates road blocks using a tileset and all the road blocks are placed
 in several rows and columns which are determined by the x coordinates and y coordinates of the blocks.
 '''
-def makeRoads(screen, x_pos, y_pos, color, width, height, road_list,num_of_objs):  # creates each background object FOR THIS SPECIFIC GAME (frogger)
+def makeRoads(screen, x_pos, y_pos, color, width, height, road_list,num_of_objs):
     original_y_coord = y_pos # holds original y coordinate for the respective road block
-
     for i in range(11): # the total number of iterations in which pairs of road blocks will be created (1 = 2 road blocks, 2 = 4 road blocks, etc)
-        for x in range(num_of_objs): # create two road blocks every iteration of this loop
+        for x in range(num_of_objs): # create two road blocks every iteration of this loop (one on top and one on bottom)
             road_list.append(RectBackground(screen, color, width, height, x_pos,y_pos, "road"))  # add each road block to the road list
             y_pos -= 60  # get ready to place the next block above the previous block (the result will be a pair of blocks)
         y_pos = original_y_coord # reset the y coordinate to what it was when the function was first called (different for each set of road blocks!)
         x_pos += 65 # update the x coordinate to the right
+
 
 '''
 This function features a start screen menu in a loop. This game loop checks if the user hits the start button,
@@ -434,7 +267,6 @@ if so, then it will let them start the game. If they hit the quit button,
 it will end the game and close the game window. '''
 def startMenu(screen):
     LEFT = 1 # This var represents left mouse button as a num value
-
     # start menu game loop
     run = True  # Used in the game loop below, true until the user clicks the close button or escape key.
     while run:
@@ -443,34 +275,29 @@ def startMenu(screen):
             if event.type == pygame.QUIT:  # if user closes the window by pressing RED X button
                 run = False
                 sys.exit()  # stops the program so surface cannot be changed after quitting
-            ''' work on implementing functionality so that when user LEFT mouse clicks on start button, game will start and
-            when user left mouse clicks on quit button, the game will end!'''
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == LEFT:
-                    print("left mouse click at x pos : " + str(mouseXPosition) + " and y pos : " + str(mouseYPosition))
+            if event.type == pygame.MOUSEBUTTONDOWN: # checks if mouse button is being clicked
+                if event.button == LEFT: # checks if the LEFT mouse button was clicked
                     if 170 <= mouseXPosition <= 541 and 280 <= mouseYPosition <= 385: # user is clicking within the START block
-                        print("clicking on start message rectangle!")
-                        # start the main game loop (ends this loop and proceeds to the game)
+                        # start the main game loop (ends this loop and proceeds to the main game loop)
                         run = False
                     elif 170 <= mouseXPosition <= 542 and 480 <= mouseYPosition <= 586:# user is clicking within the QUIT block
-                        print("clicking on quit message rectangle!")
                         # close the game
                         sys.exit()
         screen.fill(BLACK)  # clears the old screen and allows new things to be drawn
-        displayStartScreenText(screen)  # call the method to display a game over screen
+        displayStartScreenText(screen)  # call the method to display start screen text
         pygame.display.update()  # updates the ENTIRE screen (no args were passed)
 
+
 """This function provides the text to be displayed in the start menu screen.
-The title of the game, the start text, and quit text will be displayed on the screen!"""
+The title of the game, the start text, and quit text will be displayed 
+on the screen!"""
 def displayStartScreenText(screen):
     backgroundImg = pygame.image.load("images/frogbg.jpg") # background image loaded into the start screen
     screen.blit(backgroundImg, (0, 0)) # draw background to the screen
-
     font = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 70)  # set type of font and the font size
 
     gameTitle = font.render("FROGGER", True, WHITE) # displays game title
     titleRectangle = pygame.draw.rect(screen, DARK_GREEN, pygame.Rect(100, 100, 500, 150), 0) # draw rectangle box behind title text
-
 
     startMessage = font.render("Start", True, WHITE)  # displays start text
     startRectangle = pygame.draw.rect(screen, BLACK, pygame.Rect(170, 280, 375, 110), 0) # draw rectangle box behind start text
@@ -482,21 +309,20 @@ def displayStartScreenText(screen):
     screen.blit(quitMessage, (205, 500)) # draw the quit msg to the screen
     screen.blit(gameTitle, (110,140)) # draw the game title to the screen
 
-'''
-This function features a game over screen in a loop. This game loop checks if the user hits the continue button,
+
+''' This function features a game over screen in a loop. This game loop checks if the user hits the continue button,
 if so, then it will let them play again. If they hit the quit button, 
 it will end the game and close the game window.'''
 def endScreen(screen):
     pygame.mixer.music.stop() # stop the music
     # new game loop
     run = True # Used in the game loop below, true until the user clicks the close button or escape key.
-
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT: # if user closes the window by pressing RED X button
                 run = False
                 sys.exit()  # stops the program so surface cannot be changed after quitting
-                break
+                break # exit loop
             if event.type == pygame.KEYDOWN:  # if the user presses down on a key
                 if event.key == pygame.K_n:  # Pressing the n Key will quit the game
                     run = False
@@ -506,11 +332,13 @@ def endScreen(screen):
                     main() # call the main method to run again (acts like the game was reset after a game over!)
                     break
         screen.fill(BLACK) # clears the old screen and allows new things to be drawn
-        displayEndScreenText(screen) # call the method to display a game over screen
+        displayEndScreenText(screen) # call the method to display a game over text
         pygame.display.update() # updates the ENTIRE screen (no args were passed)
 
+
 """This function provides the text to be displayed in the game over screen.
-A game over and continue text prompts will be rendered and blitted to the screen!"""
+A game over and continue text prompts will be rendered and 
+blitted to the screen!"""
 def displayEndScreenText(screen):
     font = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 55)  # set type of font and the font size
     gameOverMessage = font.render("Game Over!", True, WHITE)  # display that the game is over
@@ -527,8 +355,8 @@ def displayEndScreenText(screen):
     screen.blit(continueMessage, (150, 400))  # draw the game over msg to the screen
     screen.blit(frogimage, (310,200)) # draw the frog image to the screen above the game over message
 
-'''
-This function creates grass blocks using tileset and it places them on several
+
+''' This function creates grass blocks using tileset and it places them on several
 rows and columns which are determined by the x and y coordinates.
 '''
 def createGrassBlocks(screen, screenWidth, grassList, grass_x_coord, grass_y_coord):
@@ -536,8 +364,8 @@ def createGrassBlocks(screen, screenWidth, grassList, grass_x_coord, grass_y_coo
         grassList.append(RectBackground(screen, GREEN, screenWidth, 60, grass_x_coord, grass_y_coord,"grass"))  # add each block to this list
         grass_x_coord += 65  # update the x coordinate for next block
 
-'''
-This function creates water blocks using tileset and it places them on several
+
+''' This function creates water blocks using tileset and it places them on several
 rows and columns which are determined by the x and y coordinates.
 '''
 def createWaterBlocks(screen, screenWidth, waterList, water_x_coord, water_y_coord):
@@ -550,31 +378,28 @@ def createWaterBlocks(screen, screenWidth, waterList, water_x_coord, water_y_coo
         water_y_coord += 60 # update the y coordinate when starting the next row of blocks
 
 
-'''
-This function allows for background music to be loaded in and played during the main game
-infinitely.
-'''
+'''This function allows for background music to be loaded in and played during the main game
+infinitely.   If you have music or atmospheric sound effects you want to play in your game's background,
+you can use the music function of Pygame's mixer module. In your setup section, load the music file:
+The -1 value tells Pygame to loop the music file infinitely. You can set it to
+anything from 0 and beyond to define how many times the music should loop before stopping. '''
 def playFroggerMusic():
-    '''
-    If you have music or atmospheric sound effects you want to play in your game's background,
-    you can use the music function of Pygame's mixer module. In your setup section, load the music file:
-    The -1 value tells Pygame to loop the music file infinitely. You can set it to
-    anything from 0 and beyond to define how many times the music should loop before stopping.'''
-    pygame.mixer.music.load("sounds/pixelland.mp3")
-    pygame.mixer.music.play(-1)
+    pygame.mixer.music.load("sounds/pixelland.mp3") # load music
+    pygame.mixer.music.play(-1) # play music infinitely
 
 
-'''This function reads the high scores from the text file, sorts them, then returns the list to the displayHighScores
-function to be read and displayed on screen!!!'''
+'''This function reads the high scores from the text file, sorts them, then returns the list 
+to the displayHighScores function to be read and 
+displayed on screen!!!'''
 def readHighScoresFromFile():
-    filename = "highScores.txt" # name of the file to save data to
+    filename = "highScores.txt" # name of the file to read data from
     scores = [] # sorted list of scores and their matching user names
 
     # before reading all the contents in the file, make sure that all the names and their scores are SORTED
     # after sorting, read the contents and DISPLAY them to the screen
 
     with open(filename, "r") as inFile:  # open file in read mode
-        for line in inFile:
+        for line in inFile: # go line by line in the file
             name, score = line.split(',') # splits the line into two variables with the comma as the separator value
             score = int(score) # converts the score to an integer so it can be sorted properly
             scores.append((name, score)) # add the name and score to the new list
@@ -583,6 +408,7 @@ def readHighScoresFromFile():
     scores.sort(key=lambda s: s[1], reverse = True)
 
     return scores
+
 
 '''This function displays a high score screen after the player runs out of lives and this
 screen is displayed before the game over screen.  After reading the high scores text file, it displays 
@@ -594,13 +420,11 @@ def displayHighScores(screen):
 
     # custom background for this screen
     bg = pygame.image.load("images/spacebackground.png")
-    # font object uses custom font and custom size for text labels
-    labelFont = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 40)
 
-    # header rectangle
-    headerRect = pygame.Rect(0,0,240,100)
-    # high score header label
-    highScoresHeader = labelFont.render("All High Scores", True, WHITE)
+    # label font object uses custom font and custom size for text labels
+    labelFont = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 40)
+    headerRect = pygame.Rect(0,0,240,100) # header rectangle
+    highScoresHeader = labelFont.render("All High Scores", True, WHITE)    # high score header label
 
     # list of labels
     listOfPlayerLabels = []
@@ -609,10 +433,8 @@ def displayHighScores(screen):
     labelFont2 = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 20)
     # several labels that each display a player name and player score from the file
     for name, score in allPlayersInfo: # loop through the list of tuples
-        print(name, score) # print out each tuples individual values
         currentPlayerLabel = labelFont2.render(name + "          " + str(score), False, WHITE)
-        listOfPlayerLabels.append(currentPlayerLabel)
-
+        listOfPlayerLabels.append(currentPlayerLabel) # add each label to the list
 
     # font object uses custom font and custom size for text labels
     labelFont3 = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 55)
@@ -632,15 +454,10 @@ def displayHighScores(screen):
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if continueRect.collidepoint(event.pos):  # detect mouse position over the rectangle
-                    print("Clicking over continue button rect")
                     # when user clicks on the continue rectangle, take them to the game over screen!
                     endScreen(screen)
 
-                else:
-                    print("Not clicking over any rects")
-
-        # it will set background color of screen
-        screen.fill(BLACK)
+        screen.fill(BLACK) # set background color of screen
         screen.blit(bg, (0, 0))  # add custom background to the screen
 
         # draw continue button rectangle
@@ -653,46 +470,39 @@ def displayHighScores(screen):
 
         playerlabelXPos = 150
         playerlabelYPos = 75
-        # blit and display each players name and score labels to the screen with loop
+        # blit and display each players name and score labels to the screen with the loop
         for player in listOfPlayerLabels:
             screen.blit(player, (playerlabelXPos, playerlabelYPos))
             playerlabelYPos += 20
 
-        # display.flip() will update only a portion of the
-        # screen to updated, not full area
+        # display.flip() will update only a portion of the screen (not full area)
         pygame.display.flip()
 
 
 ''' This function saves the players high score and player name to a file of
-high scores and the player names.
-'''
+high scores and the player names.'''
 def savePersonalHighScore(screen, playerName, playerScore):
     filename = "highScores.txt" # name of the file to save data to
 
     # open the high scores file and APPEND the users name and the users score to the EXISTING file
     # You dont have to worry about closing it manually, the with keyword does that at the end automatically
     with open(filename, 'a') as outFile:
-        print("File opened successfully to append!")
         # store the python data into a file
         outFile.write(playerName + ", " + str(playerScore))
         outFile.write("\n")
-
     displayHighScores(screen) # call the next function to display all high scores in a new screen
 
 
-
-'''
-This function displays the personal score of the player after the game ends and allows
-for the player to enter their custom name in a text box.  '''
+'''This function displays the personal score of the player after the game ends and allows
+for the player to enter their custom name in a text box. '''
 def inputHighScoreScreen(screen, playerFrog):
-
     # custom background for this screen
     bg = pygame.image.load("images/spacebackground.png")
 
     # basic font for user typed
     usertypingFont = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 100)
     user_text = '' # user text will be blank initially
-    nameLimit = 2 # the users input text cannot surpass this number!!!
+    nameLimit = 2 # the users input text size cannot surpass this number (subscript size)
 
     # create rectangle for user to enter their name
     input_rect = pygame.Rect(200, 170, 240, 100)
@@ -712,7 +522,6 @@ def inputHighScoreScreen(screen, playerFrog):
     labelFont4 = pygame.font.Font("fonts/press_start_2p/PressStart2P.ttf", 30)  # set type of font and the font size of the screen text labels
     enterYourNameLabel = labelFont4.render("Enter your name below", True, WHITE)  # tell the user to enter their name
 
-
     # new game loop
     while True:
         for event in pygame.event.get():
@@ -722,36 +531,22 @@ def inputHighScoreScreen(screen, playerFrog):
                 sys.exit()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if input_rect.collidepoint(event.pos): # detect mouse position over the rectangle
-                    print("Clicking over input field rect")
-                elif submitRect.collidepoint(event.pos): # detect mouse position over the rectangle
-                    print("Clicking over submit button rect")
-                    if len(user_text) == 0:
-                        print("Username is blank so default name will be given and saved!")
+                if submitRect.collidepoint(event.pos): # detect mouse position over the rectangle
+                    if len(user_text) == 0: # check length of text input
                         user_text = 'ABC'
-                    else:
-                        print("username is " + user_text + " so the entered name will be saved!")
-
                     # call the function to save users inputted name and their high score
                     savePersonalHighScore(screen, user_text, playerFrog.getFrogHighScore())
-
-                else:
-                    print("Not clicking over any rects")
 
             if event.type == pygame.KEYDOWN: # user is pressing down some key on the keyboard
                 # Check for backspace key press
                 if event.key == pygame.K_BACKSPACE:
-                    print("pressing backspace")
                     # get text input from 0 to -1 i.e. end.
                     user_text = user_text[:-1]
                 # Unicode standard is used for string
                 # formation
                 else: # must be another key getting pressed that isnt the backspace
                     if not len(user_text) > nameLimit:  # name is under the NAME LENGTH LIMIT so just add the new text to it
-                        print("pressing another key in the keyboard (a-z,0-9,etc.) but not backspace!")
                         user_text += event.unicode
-                    else:
-                        print("unable to enter anymore keys due to surpassing name limit!!!")
                     # if users text passes a certain number then dont let them enter anymore characters.
                     # they can still backspace however and this will undo the limitation
 
@@ -784,34 +579,38 @@ def inputHighScoreScreen(screen, playerFrog):
         pygame.display.flip()
 
 
-
 def main():
     SCREEN_HEIGHT = 900  # Set the width and height of the screen [width, height]
     SCREEN_WIDTH = 700
-
-
 
     # setup pygame and screen size and caption below
     pygame.init()
     pygame.mixer.init()
 
     size = (SCREEN_WIDTH, SCREEN_HEIGHT)  # create a size var holding screen width and height
-    screen = pygame.display.set_mode(size)  # intialize the screen
+    screen = pygame.display.set_mode(size)  # initialize the screen
     pygame.display.set_caption("My Frogger Game")  # set a title for the game window
 
     startMenu(screen) # call the start menu screen function
+    playFroggerMusic()    # call the play music function
 
-    # call the play music function
-    playFroggerMusic()
+    # This will be a list that will contain all the character sprites for the game.
+    all_sprites_list = pygame.sprite.Group()
 
-    all_sprites_list = pygame.sprite.Group()  # This will be a list that will contain all the character sprites for the game.
-    all_background_locations = pygame.sprite.Group()  # This will be a list that will contain all the roads, grass fields, and rivers for the game
-    all_enemy_automobiles = pygame.sprite.Group()  # This will be a list that will contain all the ENEMY automobile sprites for the game.
+    # This will be a list that will contain all the roads, grass fields, and rivers for the game
+    all_background_locations = pygame.sprite.Group()
+
+    # This will be a list that will contain all the ENEMY automobile sprites for the game.
+    all_enemy_automobiles = pygame.sprite.Group()
     all_riverLogs = pygame.sprite.Group() # A list that contains all the river objects (logs) for the game
-    all_goalPosts = pygame.sprite.Group()   # A list that contains all the goal related objects (caves/rocks) for the game
+
+    # A list that contains all the goal related objects (caves/rocks) for the game
+    all_goalPosts = pygame.sprite.Group()
 
     # create your main character object (a frog in this case!)
-    playerFrog = Frog(DARK_GREEN,300,840, 60,60)  # set frogs color,x,y positions, width,height, (in that order). Y pos has to be 840 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
+    # set frogs color,x,y positions, width,height, (in that order).
+    # Y pos has to be 840 because its the y coordinate OF THE TOP LEFT PIXEL of the character!
+    playerFrog = Frog(DARK_GREEN,300,840, 60,60)
 
     # create dragonfly object (this will be the object that gets eaten by the frog to build their high score!!!)
     dragonFly = DragonFly(50,50,150,0)
@@ -889,13 +688,17 @@ def main():
             endScreen(screen) # change screens to the game over screen
 
         #screen.blit(fps, (50, 50))  # draw the fps counter to the screen
-        screen.blit(livesShown, (0,0))  # draw the lives counter to the screen
+        screen.blit(livesShown, (0,0))  # draw the lives counter and score to the screen
         screen.blit(scoreShown, (0,40))
 
         pygame.display.update()  # update entire screen
 
         # --- Limit to 60 frames per second
-        clock.tick(30) # changed this to 6 to test out collision on 5-22-21, make sure to change it back to 60 when possible
+        clock.tick(60) # changed this to 6 to test out collision on 5-22-21, make sure to change it back to 60 when possible
     # Close the window and quit.
     pygame.quit()
+
+
 main()
+
+

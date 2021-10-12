@@ -1,0 +1,177 @@
+"""
+   10-12-21 After several weeks of debugging the game, checking the code, doing test runs,
+I am now finished with the game and will be putting it on my Github.  Perhaps I will make
+another arcade game in the future (maybe a platformer game or a puzzle game)!
+
+    9-9-21 Enable music again, do test runs of the game, eliminate useless code
+    
+    8-25-21
+    Finished the InputHighScoreScreen function which allows player to submit a 3 character name
+    and also finished the SavePersonalHighScore function which saves players name & score
+    into the high scores txt file.  In addition, I finished the DISPLAYHIGHSCORES FUNCTION
+    which reads in high scores from the existing txt file then it displays all high scores and the player names.
+    The function also lets the player continue to the game over screen and then they can restart the game or quit.
+    All thats left to do for the game is rearrange some items positions in the high score screens and enable the music
+    again. After that I have to go through the entire program line by line and make sure any unnecssary code is deleted.
+    Test runs must also be done and after that I'll call the project finished!
+
+    8-24-21
+    FIGURED OUT INPUT NAME LIMIT AND HOW TO SAVE THE PLAYERS SCORE INTO A VARIABLE.
+    YOU STILL HAVE TO CALL ON THE SAVEPERSONALHIGHSCORE FUNCTION TO SUBMIT PLAYER SCORE AND PLAYER NAME
+    INTO THE HIGH SCORES FILE.  AFTER THAT IS DONE, CALL THE DISPLAYHIGHSCORES FUNCTION
+    WHICH WILL SET A NEW SCREEN THAT DISPLAYS ALL HIGH SCORES INCLUDING THE PLAYERS SCORE.
+    IF USER PRESSES A CERTAIN KEY THEN IT WILL TAKE THEM TO THE GAME OVER SCREEN. I ADDED BOOKMARKS TO THESE PARTS
+    OF THE PARTS OF THE PROGRAM TO FIND THEM EASILY.
+
+    8-23-21 ADDED A FEW NEW FUNCTIONS TO DISPLAY A SCREEN THAT LETS
+    USER ENTER THEIR SCORE AS WELL AS DISPLAY ALL THE HIGH SCORES
+    FROM THE SCORE FILE WITH THEIR RESPECTIVE NAMES.  STILL WORKING ON THIS.
+    NEXT TIME, WORK ON SETTING AN INPUT LIMIT SO USER CANT TYPE PAST THE SIZE OF THE SCREEN
+    WHEN INPUTTING THEIR PLAYER NAME.  AFTER THAT, FIGURE OUT HOW TO SAVE THEIR SCORE INTO A VARIABLE
+    AND CALL THE SAVEPERSONALHIGHSCORE FUNCTION TO SUBMIT THEIR SCORE AND THEIR PLAYER NAME
+    INTO THE HIGH SCORES FILE.  AFTER THAT IS DONE, CALL THE DISPLAYHIGHSCORES FUNCTION
+    WHICH WILL SET A NEW SCREEN THAT DISPLAYS ALL HIGH SCORES INCLUDING THE PLAYERS SCORE.
+    IF USER PRESSES A CERTAIN KEY THEN IT WILL TAKE THEM TO THE GAME OVER SCREEN. I ADDED BOOKMARKS TO THESE PARTS
+    OF THE PARTS OF THE PROGRAM TO FIND THEM EASILY.
+
+    8-11-21 Started work on the game screen that displays personal score of the player after the
+    game ends and allows for the player to enter their custom name in a text box.  The score and name are saved to a file of
+high scores and the player names. Also created the additional game screen which shows a high score screen after the
+player runs out of lives and this screen is displayed before the game over screen and after the personal score screen.
+Using the high scores text file, it displays  several scores along with several names including the players name and the
+players score which were captured in the enter personal score screen.
+
+    8-8-21 Finished implementing the correct collision code between the frog character and the goal posts (frog will now
+    land on each goal post correctly and gain the correct points and additional points if there is a dragonfly.) If
+    the frog touches the rocks or the waters in the top row then it will lose a life and be sent back to the start!
+    I also started drawing a concept for a high scores screen which I will implement next time (hopefully its not
+    super tricky!) then after that I only need to test the game out and it should be done.
+
+    8-7-21 Continuing to refine the collision code between the frog, the water, the goal posts, and the rocks all in the
+    top row only!
+
+    8-5-21 Finished start menu screen.  Working on collision testing between frog and goal posts (not done yet!)
+
+    7-16-21 Filled text files with credits to all those artists I mentioned. I moved all tilesets and spritesheets into the
+    new folder I created just for those files, as well as moved all audio and fonts into their own folders.
+    Fixed the issue with the water blocks at the very top row because before the frog could still land on them without drowning.
+    I also adjusted the size of the lives and score counters at the top left because they were too small before.
+
+
+    7-15-21 Started working on a start menu or title screen before the game starts.  Still need to do the following tasks
+    listed above in the TODO list.
+
+    7-10-21 Tuned the collision between the frog, the dragonfly, and each goal post. Added tilesets for water blocks,
+    grass blocks, and road blocks. Placed the new blocks into the game and they look good.
+     Credits to StremArt for the grass tileset, credits to TearofTheStar for the water
+    tileset.  I added background music to the game (credits to Kevin MacLeod). I also added
+     text files to give credits to all those artists I mentioned, it is located in the game folder.
+    For next time, consider adding frog sounds (optional), check the
+    collisions between the frog and the goal posts AGAIN (just to be safe), also check the water blocks at the very top
+    row because currently the frog can still land on them without drowning.  Adjust the size of the lives and score
+    counters at the top left if you think they are too small.  Move all tilesets and spritesheets into the new
+    folder I created just for those files.  The last thing to add would be a start menu
+    or title screen before the game starts, check google for that.
+
+    7-8-21 Focus on fine tuning the collision between the frog, the dragonfly, and each goal post.  Make sure high scores
+    get updated and lives get updated correctly.  After all that is finished then you can focus on implementing sound
+    and MAYBE a start menu but its not necessary for this project.
+
+    6-??-21 Next time, work on making the dragonfly move from goalpost to goalpost so that the player has to be careful when
+    moving their frog to the goals.  If the frog succeeds in getting the dragonfly, the players high score should go up.
+    If the frog misses the dragonfly, they will fall into the goalpost (frog home) and be reset to the starting position
+    , and if they are out of lives then its GAME OVER!
+
+    6-22-21 Added code for if log goes off screen, frog goes back to starting position and loses a life.
+    Also added code for if log goes off screen and frog has 1 life, then it goes to game over screen.  Made the water
+    dangerous for the frog to land in and if the frog does touch it then it drowns, loses a life, and if it has 1 life
+    left then it results in a game over when that life is removed.  Added one static dragonfly (non moving for now).
+    (CREDITS TO ELTHEN FOR THE DRAGONFLY IMAGE AND CREDITS TO KAUZZ FOR THE CAVE ROCKS IMAGES)
+
+    6-20-21 ADDED SEVERAL MOVING LOGS IN THE WATER FOR FROG TO JUMP ONTO AND NAVIGATE ACROSS TO THE GOAL.  ALSO
+    I CREATED A NEW CLASS CALLED RIVERLOG SO I COULD MAKE LOG OBJECTS TO ADD TO A LIST OF LOGS BELOW. ADDED A SPRITE SHEET
+    TO BE USED FOR THE LOGS CALLED RPG NATURE TILESET (CREDITS TO STEALTHIX FOR MAKING THE TILESET, YOUR ART IS GREAT.)
+
+    6-6-21 Fixed lives system so it doesnt
+    go into the negative values.  It will just be a game over when it reaches 0.
+    Added a game over screen!  Added a music file to the folder of the game so implement that
+    when you can. (Finished all this)
+
+    6-6-21 Implemented working collision between all cars and the frog finally!
+
+    5-18-21 Working on the points/lives system (I went with lives)
+
+    5/4/21 - MADE SCREEN TALLER AND WIDER AND THEN ADJUSTED EVERYTHING TO SCALE! I ADDED ANOTHER ROAD AND ANOTHER GRASS SECTION.
+    I ADDED A GOAL SPOT AT THE TOP (CURRENTLY PURPLE).
+
+
+     4/24/21 Took a break from this project since I did so much earlier this month.  Still working on fixing
+     animations for the frog so thaht when it moves left and right, the animations loop smoothly and the frog
+     doesnt get stuck on one sprite image.
+
+    4/10/21 CHANGE HOW THE FROG MOVES (USE TIME DELAY FROM SAMPLEMOVEMENT2 TO HELP YOU AS REFERENCE) (Finished this!)
+
+    4/9/21 started working on making frog sprite pictures update BLOCK BY BLOCK.  run the program to see.
+
+    
+    4/9/21 I put a hold on the collision detection.  Instead I started working on making the frog
+    move as if its moving along an invisible grid.  It still moves continously in any direction
+    BUT now it moves as if its moving BLOCK BY BLOCK.  Run the samplemovement2 python file
+    to see an example of the block by block movement.
+
+    4/6/21 Started working on collision detection between frog and car1 and car2
+
+    4/6/21 Optimized the repaint function so its shorter than before but still produces same result.  Also added an FPS counter
+    to track fps drops.
+
+    4/5/21 Succeeded in ADDING THE REST OF THE DIFFERENT COLOR CAR SPRITE IMAGES SO EACH TIME A NEW CAR COMES OUT OF THE LEFT
+    OR RIGHT WALL THEN ITS A DIFFERENT COLORED CAR SPRITE! I MOVED ON FROM USING THE SIMPLE RECTANGLE SHAPES!
+
+    3/27/21  Added another water rectangle to the game, added up/down animations for the frog, added INITIAL car image for each car.
+
+    3/21/21 Added water rectangle, another car, and another road to the game!
+
+
+    3/18/21 I added the frogs walking left and walking right animations into the game!
+    I still have to add another road, add more cars, then add a little pond at the top of the level.
+    Also I still have to add UP and DOWN frog animations into the game (Use sprite sheet)
+    (make it a generic blue color for now).  Also I still have to add a scoreboard at the top.
+    Perhaps I can also add custom sprites for the automobiles too.
+
+    For my NEXT GAME, I will make the character from scratch (my own custom sprites).  For this game, I will
+    borrow the Frog sprites from the game Tomba to finish this project faster.
+
+
+    3/18/21 I eliminated the speed parameter for the vehicles moving left or right because the formula looked
+    too complex for what I'm trying to do.  I also eliminated the SPEED constant in my main program as a result.
+    I went into the Automobile class and changed self.speed to self.change_x because its more clear that way
+    that the variable is changing the SPEED of the X vector (left and right).  I adjusted the moveleft,moveright,
+    and changespeed methods as needed.
+
+
+    3/17/21 I added a frog sprite image to my game for my frog character.  Now go to this link
+    http://programarcadegames.com/python_examples/en/sprite_sheets/ and look at how the dev
+    creates walking animations for his character then do something similar to that.  Use lists,
+    image property, and appending to the list to make two lists (one for moving left "animations" and one for moving
+    right "animations")
+    Use the frog sprite sheet from  here https://www.spriters-resource.com/fullview/145236/
+    Also add another road, add more cars, then add a little pond at the top of the level
+    (make it a generic blue color for now)
+
+    3/17/21 REPLACED GREEN BLOCK WITH A FROG SPRITE that I FOUND online!  Added animations to Frog Character only (for now!)
+
+
+ 3/9/21 WROTE A FUNCTION TO HANDLE CREATION OF ROADS AND ANOTHER FUNCTION TO HANDLE CREATION OF ROAD MARKS SEPARATELY!
+
+3/2/21 ADDED ANOTHER ROAD AND MORE ROADMARKS.  FIND A WAY TO MAKE THE PROCESS OF CREATING THEM EASIER! THEN MOVE ON
+TO THE OBJECTIVES BELOW.
+
+    3/1/21 LAST THING YOU WORKED ON WAS ROADMARKS (THE YELLOW MARKS ON THE ROADS)
+
+    2/28/21 NEXT TIME, WORK ON THE COLLISION DETECTION BETWEEN EACH CAR AND FROG,
+     ADD ROADS, ADD BETTER SPACING BETWEEN EVERY SPRITE, FIND OR MAKE YOUR OWN CAR SPRITES, AND FIND A WAY TO ADD
+     SOUNDS (FOR THE CAR, OR BACKGROUND MUSIC, OR FROG SOUNDS), AND ADD A POINT SYSTEM TO KEEP TRACK OF PLAYER SCORE,
+     AND MAKE YOUR OWN BACKGROUND WITH ROADS AND DIRT AND GRASS AND WATER...THATS IT FOR NOW LOL.
+
+     ALSO RUN THE GAME NEXT TIME TO SEE YOUR PROGRESS BEFORE MAKING ANY CHANGES
+"""

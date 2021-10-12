@@ -7,11 +7,6 @@ GHR,6000
 DVR,3000
 JRR,2000
 LAL,1000
-ABC, 0
-uuu, 0
-yyy, 0
-ABC, 0
-ABC, 0
-ABC, 0
-bbb, 0
-CAR, 1000
+yty, 0
+wew, 0
+ddd, 0
