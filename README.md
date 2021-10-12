@@ -10,6 +10,7 @@ is a dragonfly that moves very fast but if it is caught by the frog then bonus p
 If the player loses all their lives, they can submit their score to the leaderboard and end the game or
 restart it.
 
-Note: If high score board becomes too full then simply go to the folder that has the game files
+Note: Make sure you have pygame installed in your Python IDE before attempting to play the game or modify it in any way.
+Also if high score board becomes too full then simply go to the folder that has the game files
 ,look for highScores.txt and delete some names and scores from it.  Make a backup of the original
 highScores.txt file in case you break the game by modifying it and want to restore it to working order.
